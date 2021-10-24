@@ -18,30 +18,15 @@ import com.google.android.gms.common.api.GoogleApi;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.material.button.MaterialButton;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity{
 
     SignInButton signInButton;
-    private GoogleApiClient googleApiClient;
     private static final int SIGN_IN = 1;
 
     @Override //doing a googleAPISign in with deprecated classes
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-
-        googleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, this::onConnectionFailed).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
-
-        signInButton = findViewById(R.id.google_sign_in);
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-                startActivityForResult(intent, SIGN_IN);
-            }
-        });
-    }
 
         TextView username1 = findViewById(R.id.username1);
         TextView password = findViewById(R.id.password);
@@ -62,32 +47,4 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             }
         });
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==RC_SIGN_IN){
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(result);
-        }
-    }
-
-    private void handleSignInResult(GoogleSignInResult result){
-        if(result.isSuccess()){
-            gotoProfile();
-        }else{
-            Toast.makeText(getApplicationContext(),"Sign in cancel",Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void gotoProfile(){
-        Intent intent=new Intent(MainActivity.this,ProfileActivity.class);
-        startActivity(intent);
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-    }
-
-
 }
