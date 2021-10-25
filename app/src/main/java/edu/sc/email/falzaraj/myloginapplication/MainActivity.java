@@ -1,24 +1,52 @@
 package edu.sc.email.falzaraj.myloginapplication;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.GoogleApi;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.material.button.MaterialButton;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity{
+
+    // template class
+    public class DataBaseReader {
+        // stream of data from data base
+        private String fromDatabase = "";
+        private JSONObject jsonObject;
+
+        public void fetchDatabase() {
+            try {
+                jsonObject = new JSONObject(fromDatabase);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // template class
+    public class DataBaseWriter {
+        // current working array list
+        private ArrayList arrayList = new ArrayList();
+        private JSONObject toDataBase = new JSONObject();
+
+        public void prepareJSONObject() {
+            for (int i = 0; i < arrayList.size(); i++) {
+                // write array list items to JSONObject
+            }
+        }
+        public void writeChanges() {
+            // write JSONObject to database
+        }
+    }
 
     SignInButton signInButton;
     private static final int SIGN_IN = 1;
