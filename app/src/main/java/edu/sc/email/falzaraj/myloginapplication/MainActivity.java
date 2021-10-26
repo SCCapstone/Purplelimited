@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     SignInButton signInButton;
-    private static final int SIGN_IN = 1;`
+    private static final int SIGN_IN = 1;
 
     @Override //doing a googleAPISign in with deprecated classes
     protected void onCreate(Bundle savedInstanceState) {
