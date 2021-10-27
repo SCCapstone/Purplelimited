@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "927741976464",
+    "project_id": "purplelimited-8fe65",
+    "storage_bucket": "purplelimited-8fe65.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:927741976464:android:9dde7e4b732dab5a369d15",
+        "android_client_info": {
+          "package_name": "edu.sc.email.falzaraj.myloginapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "927741976464-m2ggnpaf9982hkf8r5fv11sak9l6kbfo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZACKnkwLKgMZ__hmUZ0jDX0M8FlwbVRI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "927741976464-m2ggnpaf9982hkf8r5fv11sak9l6kbfo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
