@@ -23,7 +23,7 @@
         android:textStyle="bold" />
 
     <EditText
-        android:id="@+id/username1"
+        android:id="@+id/etName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/signin"
@@ -43,10 +43,10 @@
         android:textColorHint="@color/white" />
 
     <EditText
-        android:id="@+id/password"
+        android:id="@+id/etPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/username1"
+        android:layout_below="@id/etName"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
@@ -66,9 +66,12 @@
         android:id="@+id/loginbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/password"
+        android:layout_below="@id/etPassword"
         android:layout_centerHorizontal="true"
-        android:layout_margin="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
         android:backgroundTint="@color/design_default_color_secondary"
         android:shadowColor="@color/black"
         android:shadowDx="2"
@@ -77,28 +80,21 @@
         android:text="LOGIN" />
 
     <TextView
-        android:id="@+id/forgotpassword"
+        android:id="@+id/noAttempts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/loginbutton"
         android:layout_centerHorizontal="true"
-        android:layout_margin="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
         android:shadowColor="@color/black"
         android:shadowDx="2"
         android:shadowDy="2"
         android:shadowRadius="5"
-        android:text="Forgot password?"
+        android:text="Number of attempts remaining: 3"
         android:textColor="@color/white" />
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/google_sign_in"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="141dp"
-        android:layout_marginBottom="200dp" />
 
 
 </RelativeLayout>
