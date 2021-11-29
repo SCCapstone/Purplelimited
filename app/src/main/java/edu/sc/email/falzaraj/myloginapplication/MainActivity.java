@@ -1,6 +1,8 @@
 package edu.sc.email.falzaraj.myloginapplication;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
 import android.view.View;
@@ -75,4 +77,61 @@ public class MainActivity extends AppCompatActivity{
             }
         });
     }
+
+
+    private ActionBar actionbar;
+    private ViewPager viewPager;
+    private ArrayList<Model> modelArrayList;
+    private Adapter adapter;
+    @Override
+
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+
+        actionbar = getSupportActionBar();
+
+        viewPager = findViewById(R.id.viewPager);
+        loadCards();
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                String title = modelArrayList.get(position).getTitle();
+                actionbar.setTitle(title);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+    }
+
+    private void loadCards() {
+        modelArrayList = new ArrayList<Model>();
+        modelArrayList.add(new Model("Beef and Broccoli", "Tender strips of steak and crisp broccoli florets in a rich ginger and garlic sauce.", R.drawable.beefbroc));
+        modelArrayList.add(new Model("Meatball Sub", "Tender juicy meatballs simmered in a flavorful tomato sauce are placed in a roll and topped with cheese.", R.drawable.meatballsub));
+        modelArrayList.add(new Model("Penne Vodka", "Made with heavy cream, crushed tomatoes, onions", R.drawable.pennevodka));
+        modelArrayList.add(new Model("Stuffed Red Peppers", "Hollowed or halved peppers filled with any of a variety of fillings, often including meat, vegetables, cheese, rice, or sauce", R.drawable.stuffedrpeppers));
+
+        adapter = new Adapter(this, modelArrayList);
+        viewPager.setAdapter(Adapter);
+        viewPager.setPadding(100, 0, 100, 0);
+    }
+
+
+
+
+
+
+
+
 }

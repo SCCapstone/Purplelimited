@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_vertical">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:cardCornerRadius="25dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/bannerT"
+                android:src="@drawable/beefbroc"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:scaleType="centerCrop"/>
+
+            <TextView
+                android:id="@+id/recipeT"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="Recipe Name"
+                android:textColor="#000"
+                android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/descriptionT"
+            android:layout_width="288dp"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="40dp"
+            android:layout_marginStart="50dp"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:minLines="3"
+            android:text="Description" />
+
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>
