@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_suggestions"
+        android:icon="@drawable/suggestions_icon"
+        android:title="@string/title_suggestions"
+        app:showAsAction="always|withText" />
+
+    <item
+        android:id="@+id/navigation_saved_recipes"
+        android:icon="@drawable/saved_recipes_icon"
+        android:title="@string/title_saved"
+        app:showAsAction="always|withText"/>
+
+    <item
+        android:id="@+id/navigation_on_hand"
+        android:icon="@drawable/on_hand_icon"
+        android:title="@string/title_on_hand"
+        app:showAsAction="always|withText"/>
+
+    <item
+        android:id="@+id/navigation_search"
+        android:icon="@drawable/search_icon"
+        android:title="@string/title_search"
+        app:showAsAction="always|withText"/>
+
+</menu>
