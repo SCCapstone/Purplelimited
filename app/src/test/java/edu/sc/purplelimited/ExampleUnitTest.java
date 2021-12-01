@@ -1,4 +1,4 @@
-package edu.sc.email.falzaraj.myloginapplication;
+package edu.sc.purplelimited;
 
 import org.junit.Test;
 

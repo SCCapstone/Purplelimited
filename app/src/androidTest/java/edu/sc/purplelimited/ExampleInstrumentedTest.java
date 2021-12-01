@@ -1,4 +1,4 @@
-package edu.sc.email.falzaraj.myloginapplication;
+package edu.sc.purplelimited;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("edu.sc.email.falzaraj.myloginapplication", appContext.getPackageName());
+        assertEquals("edu.sc.purplelimited", appContext.getPackageName());
     }
 }

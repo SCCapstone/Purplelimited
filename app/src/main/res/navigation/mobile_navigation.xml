@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_suggestions">
+    app:labelVisibilityMode="labeled"
+
+    <fragment
+        android:id="@+id/navigation_suggestions"
+        android:name="edu.sc.purplelimited.ui.suggestions.SuggestionsFragment"
+        android:label="@string/title_suggestions"
+        tools:layout="@layout/fragment_suggestions" />
+
+    <fragment
+        android:id="@+id/navigation_saved_recipes"
+        android:name="edu.sc.purplelimited.ui.saved_recipes.SavedRecipesFragment"
+        android:label="@string/title_saved"
+        tools:layout="@layout/fragment_saved_recipes" />
+
+    <fragment
+        android:id="@+id/navigation_on_hand"
+        android:name="edu.sc.purplelimited.ui.on_hand_ingredients.OnHandIngredientsFragment"
+        android:label="@string/title_on_hand"
+        tools:layout="@layout/fragment_on_hand" />
+
+    <fragment
+        android:id="@+id/navigation_search"
+        android:name="edu.sc.purplelimited.ui.search.SearchFragment"
+        android:label="@string/title_search"
+        tools:layout="@layout/fragment_search" />
+</navigation>
