@@ -13,8 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import edu.sc.purplelimited.classes.Recipe;
 import edu.sc.purplelimited.ui.saved_recipes.SavedRecipesViewModel;
@@ -26,10 +29,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SavedRecipesFragment extends Fragment {
-    private final List<String> savedRecipes = new ArrayList<>();
+    private ArrayList<String> savedRecipes;
     private FragmentSavedRecipesBinding binding;
     private FirebaseDatabase database;
     private DatabaseReference users;
+    private ListView savedRecipesListView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -37,6 +41,34 @@ public class SavedRecipesFragment extends Fragment {
                 new ViewModelProvider(this).get(SavedRecipesViewModel.class);
         binding = FragmentSavedRecipesBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        savedRecipesListView = root.findViewById(R.id.saved_recipe_list_view);
+        database = FirebaseDatabase.getInstance();
+        users = database.getReference("users");
+        savedRecipes = new ArrayList<String>();
+
+        users.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //TODO: add image references to database for each recipe
+                //TODO: replace lookingFor string with int userId
+                String lookingFor = "bob";
+                savedRecipes.clear();
+                for(DataSnapshot user : dataSnapshot.getChildren()) {
+                    String name = (String) user.child("name").getValue();
+                    if (name.equalsIgnoreCase(lookingFor)) {
+                        DataSnapshot savedRecipesDatabase = user.child("savedRecipes");
+                        for (DataSnapshot recipe : savedRecipesDatabase.getChildren()) {
+                            String recipeName = (String) recipe.child("name").getValue();
+                            savedRecipes.add(recipeName);
+                        }
+                    }
+                }
+                populateRecipeList();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {      }
+        });
+
         final TextView textView = binding.textDashboard;
         savedRecipesViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
@@ -48,8 +80,8 @@ public class SavedRecipesFragment extends Fragment {
         binding = null;
     }
 
-    // TODO: fetch saved recipes from database
     private void populateRecipeList() {
-
+        ArrayAdapter arrayAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, savedRecipes);
+        savedRecipesListView.setAdapter(arrayAdapter);
     }
 }
