@@ -14,7 +14,6 @@ import androidx.viewpager.widget.PagerAdapter;
 import java.util.ArrayList;
 
 import edu.sc.purplelimited.R;
-import edu.sc.purplelimited.ui.swipe_ui.RecipeCard;
 
 public class CardViewAdapter extends PagerAdapter {
 
@@ -39,7 +38,7 @@ public class CardViewAdapter extends PagerAdapter {
   @NonNull
   @Override
   public Object instantiateItem(@NonNull ViewGroup container, int position) {
-    View view = LayoutInflater.from(context).inflate(R.layout.card_layout,
+    View view = LayoutInflater.from(context).inflate(R.layout.search_result_card,
                                                      container,
                                          false);
     TextView cardTitle = view.findViewById(R.id.cardTitle);
@@ -52,7 +51,7 @@ public class CardViewAdapter extends PagerAdapter {
     cardTitle.setText(title);
     cardDescription.setText(description);
     ArrayAdapter listAdapter = new ArrayAdapter<String>(context,
-                                                        R.layout.list_item,
+                                                        R.layout.search_result_ingredient,
                                                         ingredientsList);
     cardIngredients.setAdapter(listAdapter);
     container.addView(view, position);

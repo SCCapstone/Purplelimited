@@ -14,9 +14,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,24 +28,28 @@ import java.util.ArrayList;
 import edu.sc.purplelimited.R;
 import edu.sc.purplelimited.classes.Recipe;
 import edu.sc.purplelimited.databinding.FragmentSearchBinding;
+import edu.sc.purplelimited.ui.swipe_ui.Adapter;
+import edu.sc.purplelimited.ui.swipe_ui.CardViewAdapter;
+import edu.sc.purplelimited.ui.swipe_ui.Model;
+import edu.sc.purplelimited.ui.swipe_ui.RecipeCard;
 
 public class SearchFragment extends Fragment {
   private FragmentSearchBinding binding;
   private ViewPager viewPager;
   private EditText searchBar;
+  private ViewPager searchResultsCards;
   private ArrayList<Recipe> recipeArrayList = new ArrayList<>();
   private View root;
-  private FirebaseDatabase database;
-  private DatabaseReference users;
 
   public View onCreateView(@NonNull LayoutInflater inflater,
                            ViewGroup container, Bundle savedInstanceState) {
     SearchViewModel searchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
     binding = FragmentSearchBinding.inflate(inflater, container, false);
     root = binding.getRoot();
-    viewPager = root.findViewById(R.id.view_pager_search);
+    viewPager = root.findViewById(R.id.view_pager_suggestions);
     searchBar = root.findViewById(R.id.search_recipe_text);
     Button searchButton = root.findViewById(R.id.search_button);
+    searchResultsCards = root.findViewById(R.id.view_pager_suggestions);
 
 
     searchButton.setOnClickListener(view -> {
@@ -128,15 +129,22 @@ public class SearchFragment extends Fragment {
             continue;
           }
         }
-        createSearchResultList();
+        populateSearchResults();
       } catch (JSONException e) {
         e.printStackTrace();
       }
     }
   }
 
-  private void createSearchResultList() {
-    //TODO:Populate search results list
+  private void populateSearchResults() {
+    ArrayList<RecipeCard> recipeCards = new ArrayList<>();
+    for(int i = 0; i < 5; i++) {
+      Recipe recipe = recipeArrayList.get(i);
+      recipeCards.add(new RecipeCard(recipe.getName(), recipe.getDescription(), recipe.getIngredients()));
+    }
+    CardViewAdapter cardViewAdapter = new CardViewAdapter(getContext(), recipeCards);
+    searchResultsCards.setAdapter(cardViewAdapter);
+    searchResultsCards.setPadding(50,0, 50, 0);
   }
 
   @Override
