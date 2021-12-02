@@ -1,3 +1,5 @@
+package edu.sc.purplelimited.ui.swipe_ui;
+
 public class Model {
     String recipe, description;
     int image;

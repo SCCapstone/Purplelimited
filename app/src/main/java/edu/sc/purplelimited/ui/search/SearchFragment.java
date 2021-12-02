@@ -46,7 +46,7 @@ public class SearchFragment extends Fragment {
     SearchViewModel searchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
     binding = FragmentSearchBinding.inflate(inflater, container, false);
     root = binding.getRoot();
-    viewPager = root.findViewById(R.id.view_pager_search);
+    viewPager = root.findViewById(R.id.view_pager_suggestions);
     searchBar = root.findViewById(R.id.search_recipe_text);
     Button searchButton = root.findViewById(R.id.search_button);
 
