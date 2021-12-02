@@ -10,7 +10,7 @@ public class Recipe {
 
     public Recipe(String title, String description, ArrayList<String> ingredients) {
         this.name = title;
-        if (description.equals("") || description.contains("href")) {
+        if (description.equals("") || description.contains("href") || description.equals("null")) {
             this.description = "A recipe for homemade " + title + ".";
         } else {
             this.description = description;

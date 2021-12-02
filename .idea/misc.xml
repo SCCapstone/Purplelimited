@@ -6,11 +6,16 @@
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.9" />
         <entry key="app/src/main/res/drawable/ic_baseline_food_bank_24.xml" value="0.21510416666666668" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/card_layout.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.26811594202898553" />
         <entry key="app/src/main/res/layout/fragment_on_hand.xml" value="0.32065217391304346" />
         <entry key="app/src/main/res/layout/fragment_saved_recipes.xml" value="0.2807971014492754" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.19895833333333332" />
         <entry key="app/src/main/res/layout/fragment_suggestions.xml" value="0.2807971014492754" />
+        <entry key="app/src/main/res/layout/recipe_card.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/search_result_card.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/search_result_ingredient.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/search_results_row.xml" value="0.1" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
       </map>
     </option>
