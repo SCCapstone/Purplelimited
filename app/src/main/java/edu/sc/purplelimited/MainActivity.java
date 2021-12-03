@@ -2,6 +2,7 @@ package edu.sc.purplelimited;
 
 import android.os.Bundle;
 
+import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -22,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
-        if(loggedIn) {
+        if(loggedIn) {                                  //TODO this might be better as a while loop
             setContentView(binding.getRoot());
             findViewById(R.id.nav_view);
             AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
@@ -31,8 +32,10 @@ public class MainActivity extends AppCompatActivity {
             NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
             NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
             NavigationUI.setupWithNavController(binding.navView, navController);
-        } else {
-            //TODO: login Activity
+        }
+        else {
+            //Takes user back to login page when loggedIn = false
+        startActivity(new Intent(MainActivity.this, LoginActivity.class));
         }
     }
 
