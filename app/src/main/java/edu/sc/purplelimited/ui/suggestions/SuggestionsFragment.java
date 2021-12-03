@@ -1,5 +1,6 @@
 package edu.sc.purplelimited.ui.suggestions;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,8 +84,34 @@ public class SuggestionsFragment extends Fragment {
 
     private void populateSuggestionCards() {
         ArrayList<Model> recipeCards = new ArrayList<>();
+        int burger = R.drawable.burger;
+        int chickenSalad = R.drawable.chicken_salad;
+        int pasta = R.drawable.alfredo_shrimp_pasta;
+        int chili = R.drawable.chili;
+        int wings = R.drawable.wings;
+        int current;
         for(Recipe recipe : savedRecipesList) {
-            recipeCards.add(new Model(recipe.getName(), recipe.getDescription(), R.drawable.place_holder_recipe_image));
+            switch(recipe.getName()) {
+                case "BBQ Bacon Burger":
+                    current = burger;
+                    break;
+                case "Chicken Salad":
+                    current = chickenSalad;
+                    break;
+                case "Shrimp Alfredo Pasta":
+                    current = pasta;
+                    break;
+                case "Turkey and Black Bean Chili":
+                    current = chili;
+                    break;
+                case "Korean BBQ Wings":
+                    current = wings;
+                    break;
+                default:
+                    current = burger;
+                    break;
+            }
+            recipeCards.add(new Model(recipe.getName(), recipe.getDescription(), current));
         }
         Adapter cardViewAdapter = new Adapter(getContext(), recipeCards);
         suggestionsCards.setAdapter(cardViewAdapter);
