@@ -128,6 +128,10 @@ public class LoginActivity extends AppCompatActivity{
             if(userName.equals(RegistrationActivity.userAccount.getuserName()) && userPassword.equals(RegistrationActivity.userAccount.getuserPassword())) {
                 return true;
             }
+            // Testing account
+            else if(userName.equals("admin") && userPassword.equals("admin")) {
+                return true;
+            }
         }
 
         return false;

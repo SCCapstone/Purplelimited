@@ -81,7 +81,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
         }
         // Check if the passwords match (to ensure the user did not mistype it when creating the account)
-        if(!password.equals(password2)) {
+        if(!password.equals(password2) && (password.length() != password2.length())) {
             Toast.makeText(this, "Please ensure your passwords match!", Toast.LENGTH_SHORT).show();
             return false;
         }
