@@ -1,33 +1,35 @@
 package edu.sc.purplelimited;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class UserAccount {
-    // Set default values for UserAccount
-    private String userName;
-    private String userPassword;
 
-    // Constructor
-    UserAccount(String UserName, String UserPassword){
-        this.userName = UserName;
-        this.userPassword = UserPassword;
+    // Creating HashMap
+    private HashMap<String, String> accountMap = new HashMap<String, String>();
+
+    public void addAccount(String savedUsername, String savedPassword) {
+        accountMap.put(savedUsername, savedPassword);
     }
 
-    public String getuserName() {
-
-        return userName;
+    public boolean checkUsername(String savedUsername) {
+        return accountMap.containsKey(savedUsername);
     }
 
-    public void setuserName(String UserName) {
-
-        userName = UserName;
+    public boolean checkAccount(String savedUsername, String savedPassword) {
+        if(accountMap.containsKey(savedUsername)) {
+            return savedPassword.equals(accountMap.get(savedUsername));
+        }
+        return false;
     }
 
-    public String getuserPassword() {
-
-        return userPassword;
-    }
-
-    public void setuserPassword(String UserPassword) {
-
-        userPassword = UserPassword;
+    public void loadAccount(Map<String, ?> preferencesMap) {
+        for(Map.Entry<String, ?> entries : preferencesMap.entrySet()) {
+            if(!entries.getKey().equals("RememeberMe") || !entries.getKey().equals("SavedUsername")) {
+                if(!entries.getKey().equals("SavedPassword")) {
+                    accountMap.put(entries.getKey(), entries.getValue().toString());
+                }
+            }
+        }
     }
 }

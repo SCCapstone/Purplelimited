@@ -1,7 +1,5 @@
 package edu.sc.purplelimited;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,7 +10,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class LoginActivity extends AppCompatActivity{
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.Map;
+
+public class LoginActivity extends AppCompatActivity {
 
     private EditText Name;
     private EditText Password;
@@ -26,6 +28,8 @@ public class LoginActivity extends AppCompatActivity{
     String userPassword = "admin"; //these are hard-coded for testing
 
     boolean isValid = false;
+
+    public UserAccount userAccount;
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor sharedPreferencesEditor;
@@ -43,17 +47,24 @@ public class LoginActivity extends AppCompatActivity{
         Register = findViewById(R.id.registerbutton);
         RememberMe = findViewById(R.id.RememberMe);
 
-        sharedPreferences = getApplicationContext().getSharedPreferences("CredentialsDB", MODE_PRIVATE);
+        userAccount = new UserAccount();
+
+        sharedPreferences = getApplicationContext().getSharedPreferences("UserAccount", MODE_PRIVATE);
         sharedPreferencesEditor = sharedPreferences.edit();
 
-        if(sharedPreferences != null){
+        // Check to see if the shared preferences file exists
+        if(sharedPreferences != null) {
 
-            String savedUsername = sharedPreferences.getString("Username", "");
-            String savedPassword = sharedPreferences.getString("Password", "");
+            Map<String, ?> preferencesMap = sharedPreferences.getAll();
 
-            RegistrationActivity.userAccount = new UserAccount(savedUsername, savedPassword);
+            if(preferencesMap.size() != 0) {
+                userAccount.loadAccount(preferencesMap);
+            }
 
-            if(sharedPreferences.getBoolean("Checkbox", false)){
+            String savedUsername = sharedPreferences.getString("SavedUsername", "");
+            String savedPassword = sharedPreferences.getString("SavedPassword", "");
+
+            if(sharedPreferences.getBoolean("Checkbox", false)) {
                 Name.setText(savedUsername);
                 Password.setText(savedPassword);
                 RememberMe.setChecked(true);
@@ -115,25 +126,12 @@ public class LoginActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 sharedPreferencesEditor.putBoolean("RememberMeCheckbox", RememberMe.isChecked());
-
                 sharedPreferencesEditor.apply();
             }
         });
     }
 
-    private boolean validate(String userName, String userPassword)
-    {
-        // Match user details
-        if(RegistrationActivity.userAccount != null) {
-            if(userName.equals(RegistrationActivity.userAccount.getuserName()) && userPassword.equals(RegistrationActivity.userAccount.getuserPassword())) {
-                return true;
-            }
-            // Testing account
-            else if(userName.equals("admin") && userPassword.equals("admin")) {
-                return true;
-            }
-        }
-
-        return false;
+    private boolean validate(String userName, String userPassword) {
+        return userAccount.checkAccount(userName, userPassword); // moved validate from here to the UserAccount.java
     }
 }
