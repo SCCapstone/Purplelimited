@@ -18,12 +18,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import edu.sc.purplelimited.R;
+import edu.sc.purplelimited.classes.Ingredient;
+import edu.sc.purplelimited.classes.Recipe;
 import edu.sc.purplelimited.databinding.FragmentOnHandBinding;
 
 import java.util.ArrayList;
 
 public class OnHandIngredientsFragment extends Fragment {
-    private final ArrayList<String> onHandIngredientsList = new ArrayList<>();
+    private final ArrayList<Ingredient> onHandIngredientsList = new ArrayList<>();
     private FragmentOnHandBinding binding;
     private ListView onHandListView;
 
@@ -41,8 +43,11 @@ public class OnHandIngredientsFragment extends Fragment {
         onHand.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                String added = snapshot.getValue(String.class);
-                onHandIngredientsList.add(added);
+
+                String ingName = snapshot.child("ingredientName").getValue(String.class);
+                String ingUnit = snapshot.child("units").getValue(String.class);
+                String ingQuantity = snapshot.child("quantity").getValue(Long.class).toString();
+                onHandIngredientsList.add(new Ingredient(ingName, ingUnit, ingQuantity));
                 populateOnHandIngredients();
             }
 
@@ -68,6 +73,7 @@ public class OnHandIngredientsFragment extends Fragment {
         return binding.getRoot();
     }
 
+    //TODO create custom list view for on hand ingredients w/ add, remove and + - quantity buttons
     private void populateOnHandIngredients() {
         ArrayAdapter arrayAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, onHandIngredientsList);
         onHandListView.setAdapter(arrayAdapter);

@@ -14,6 +14,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import java.util.ArrayList;
 
 import edu.sc.purplelimited.R;
+import edu.sc.purplelimited.classes.Ingredient;
 
 public class CardViewAdapter extends PagerAdapter {
 
@@ -47,7 +48,11 @@ public class CardViewAdapter extends PagerAdapter {
     RecipeCard recipeCard = cardContentArrayList.get(position);
     String title = recipeCard.getTitle();
     String description = recipeCard.getDescription();
-    ArrayList<String> ingredientsList = recipeCard.getIngredients();
+    ArrayList<Ingredient> ings = recipeCard.getIngredients();
+    ArrayList<String> ingredientsList = new ArrayList<>();
+    for (int i = 0; i < ings.size();i++) {
+      ingredientsList.add(ings.get(i).toString());
+    }
     cardTitle.setText(title);
     cardDescription.setText(description);
     ArrayAdapter listAdapter = new ArrayAdapter<String>(context,

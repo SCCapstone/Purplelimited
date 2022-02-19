@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import edu.sc.purplelimited.R;
+import edu.sc.purplelimited.classes.Ingredient;
 import edu.sc.purplelimited.classes.Recipe;
 import edu.sc.purplelimited.databinding.FragmentSavedRecipesBinding;
 
@@ -45,7 +46,17 @@ public class SavedRecipesFragment extends Fragment {
         savedRecipes.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Recipe added = snapshot.getValue(Recipe.class);
+                String name = snapshot.child("name").getValue(String.class);
+                String description = snapshot.child("description").getValue(String.class);
+                ArrayList<Ingredient> ingredientsList= new ArrayList<>();
+                DataSnapshot ingredients = snapshot.child("ingredients");
+                for(DataSnapshot ing : ingredients.getChildren()) {
+                    String ingName = ing.child("ingredientName").getValue(String.class);
+                    String ingUnit = ing.child("units").getValue(String.class);
+                    String ingQuantity = ing.child("quantity").getValue(Long.class).toString();
+                    ingredientsList.add(new Ingredient(ingName, ingUnit, ingQuantity));
+                }
+                Recipe added = new Recipe(name, description, ingredientsList);
                 savedRecipesArrayList.add(added);
                 populateRecipeList();
             }
@@ -56,6 +67,7 @@ public class SavedRecipesFragment extends Fragment {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                //TODO fix this to match suggestions logic
                 Recipe removed = snapshot.getValue(Recipe.class);
                 savedRecipesArrayList.remove(removed);
                 populateRecipeList();
