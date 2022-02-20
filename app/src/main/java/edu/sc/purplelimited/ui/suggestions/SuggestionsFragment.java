@@ -21,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 
 import edu.sc.purplelimited.R;
+import edu.sc.purplelimited.classes.Ingredient;
 import edu.sc.purplelimited.classes.Recipe;
 import edu.sc.purplelimited.databinding.FragmentSuggestionsBinding;
 import edu.sc.purplelimited.ui.swipe_ui.Adapter;
@@ -29,10 +30,11 @@ import edu.sc.purplelimited.ui.swipe_ui.Model;
 public class SuggestionsFragment extends Fragment {
     private FragmentSuggestionsBinding binding;
     private ViewPager suggestionsCards;
-    private final ArrayList<Recipe> savedRecipesList = new ArrayList<>();
+    private final ArrayList<Recipe> suggestedRecipesList = new ArrayList<>();
 
     //TODO implement save functionality
     //TODO implement dismiss functionality
+    //TODO pull suggestions from API
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -42,13 +44,23 @@ public class SuggestionsFragment extends Fragment {
         suggestionsCards = root.findViewById(R.id.view_pager_suggestions);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         // TODO replace hardcoded reference with userId
-        DatabaseReference savedRecipes = database.getReference("users").child("1").child("suggestedRecipes");
+        DatabaseReference suggestedRecipes = database.getReference("users").child("1").child("suggestedRecipes");
 
-        savedRecipes.addChildEventListener(new ChildEventListener() {
+        suggestedRecipes.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Recipe added = snapshot.getValue(Recipe.class);
-                savedRecipesList.add(added);
+                String name = snapshot.child("name").getValue(String.class);
+                String description = snapshot.child("description").getValue(String.class);
+                ArrayList<Ingredient> ingredientsList= new ArrayList<>();
+                DataSnapshot ingredients = snapshot.child("ingredients");
+                for(DataSnapshot ing : ingredients.getChildren()) {
+                    String ingName = ing.child("ingredientName").getValue(String.class);
+                    String ingUnit = ing.child("units").getValue(String.class);
+                    String ingQuantity = ing.child("quantity").getValue(Long.class).toString();
+                    ingredientsList.add(new Ingredient(ingName, ingUnit, ingQuantity));
+                }
+                Recipe added = new Recipe(name, description, ingredientsList);
+                suggestedRecipesList.add(added);
                 populateSuggestionCards();
             }
 
@@ -58,8 +70,10 @@ public class SuggestionsFragment extends Fragment {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                //TODO match this with onChildAdded logic
+
                 Recipe removed = snapshot.getValue(Recipe.class);
-                savedRecipesList.remove(removed);
+                suggestedRecipesList.remove(removed);
                 populateSuggestionCards();
             }
 
@@ -86,7 +100,7 @@ public class SuggestionsFragment extends Fragment {
         int chili = R.drawable.chili;
         int wings = R.drawable.wings;
         int current;
-        for(Recipe recipe : savedRecipesList) {
+        for(Recipe recipe : suggestedRecipesList) {
             switch(recipe.getName()) {
                 case "BBQ Bacon Burger":
                     current = burger;

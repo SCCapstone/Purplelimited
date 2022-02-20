@@ -2,11 +2,13 @@ package edu.sc.purplelimited.ui.swipe_ui;
 
 import java.util.ArrayList;
 
+import edu.sc.purplelimited.classes.Ingredient;
+
 public class RecipeCard {
   String title, description;
-  ArrayList<String> ingredients;
+  ArrayList<Ingredient> ingredients;
 
-  public RecipeCard(String title, String description, ArrayList<String> ingredients) {
+  public RecipeCard(String title, String description, ArrayList<Ingredient> ingredients) {
     this.title = title;
     this.description = description;
     this.ingredients = ingredients;
@@ -20,7 +22,7 @@ public class RecipeCard {
     return description;
   }
 
-  public ArrayList<String> getIngredients() {
+  public ArrayList<Ingredient> getIngredients() {
     return ingredients;
   }
 
