@@ -53,7 +53,7 @@ public class SavedRecipesFragment extends Fragment {
                 for(DataSnapshot ing : ingredients.getChildren()) {
                     String ingName = ing.child("ingredientName").getValue(String.class);
                     String ingUnit = ing.child("units").getValue(String.class);
-                    String ingQuantity = ing.child("quantity").getValue(Long.class).toString();
+                    String ingQuantity = ing.child("quantity").getValue(String.class);
                     ingredientsList.add(new Ingredient(ingName, ingUnit, ingQuantity));
                 }
                 Recipe added = new Recipe(name, description, ingredientsList);

@@ -46,7 +46,7 @@ public class OnHandIngredientsFragment extends Fragment {
 
                 String ingName = snapshot.child("ingredientName").getValue(String.class);
                 String ingUnit = snapshot.child("units").getValue(String.class);
-                String ingQuantity = snapshot.child("quantity").getValue(Long.class).toString();
+                String ingQuantity = snapshot.child("quantity").getValue(String.class);
                 onHandIngredientsList.add(new Ingredient(ingName, ingUnit, ingQuantity));
                 populateOnHandIngredients();
             }
