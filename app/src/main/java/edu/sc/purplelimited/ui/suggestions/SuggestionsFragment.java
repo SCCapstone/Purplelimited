@@ -44,46 +44,40 @@ public class SuggestionsFragment extends Fragment {
         suggestionsCards = root.findViewById(R.id.view_pager_suggestions);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         // TODO replace hardcoded reference with userId
-        DatabaseReference suggestedRecipes = database.getReference("users").child("1").child("suggestedRecipes");
+        DatabaseReference suggestedRecipes;
+        suggestedRecipes = database.getReference("users").child("1").child("suggestedRecipes");
 
         suggestedRecipes.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                String name = snapshot.child("name").getValue(String.class);
-                String description = snapshot.child("description").getValue(String.class);
+            public void onChildAdded(@NonNull DataSnapshot ds, @Nullable String pcn) {
+                String name = ds.child("name").getValue(String.class);
+                String description = ds.child("description").getValue(String.class);
                 ArrayList<Ingredient> ingredientsList= new ArrayList<>();
-                DataSnapshot ingredients = snapshot.child("ingredients");
+                DataSnapshot ingredients = ds.child("ingredients");
                 for(DataSnapshot ing : ingredients.getChildren()) {
                     String ingName = ing.child("ingredientName").getValue(String.class);
                     String ingUnit = ing.child("units").getValue(String.class);
-                    String ingQuantity = ing.child("quantity").getValue(String.class);
-                    ingredientsList.add(new Ingredient(ingName, ingUnit, ingQuantity));
+                    int ingQuantity = ing.child("quantity").getValue(int.class);
+                    ingredientsList.add(new Ingredient(ingName, ingUnit, ingQuantity, "none"));
                 }
                 Recipe added = new Recipe(name, description, ingredientsList);
                 suggestedRecipesList.add(added);
                 populateSuggestionCards();
             }
-
             @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+            public void onChildChanged(@NonNull DataSnapshot ds, @Nullable String pcn) {
             }
-
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
                 //TODO match this with onChildAdded logic
-
                 Recipe removed = snapshot.getValue(Recipe.class);
                 suggestedRecipesList.remove(removed);
                 populateSuggestionCards();
             }
-
             @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-            }
-
+            public void onChildMoved(@NonNull DataSnapshot ds, @Nullable String pcn) {/*empty*/}
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
+            public void onCancelled(@NonNull DatabaseError error) {/*empty*/}
         });
 
         final TextView textView = binding.textHome;
@@ -123,9 +117,11 @@ public class SuggestionsFragment extends Fragment {
             }
             recipeCards.add(new Model(recipe.getName(), recipe.getDescription(), current));
         }
-        Adapter cardViewAdapter = new Adapter(getContext(), recipeCards);
-        suggestionsCards.setAdapter(cardViewAdapter);
-        suggestionsCards.setPadding(50,0, 50, 0);
+        if(getContext()!=null) {
+            Adapter cardViewAdapter = new Adapter(getContext(), recipeCards);
+            suggestionsCards.setAdapter(cardViewAdapter);
+            suggestionsCards.setPadding(50,0, 50, 0);
+        }
     }
 
     @Override
