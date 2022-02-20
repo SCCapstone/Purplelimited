@@ -1,11 +1,15 @@
 package edu.sc.purplelimited.ui.on_hand_ingredients;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,64 +23,168 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import edu.sc.purplelimited.R;
 import edu.sc.purplelimited.classes.Ingredient;
-import edu.sc.purplelimited.classes.Recipe;
 import edu.sc.purplelimited.databinding.FragmentOnHandBinding;
 
 import java.util.ArrayList;
 
 public class OnHandIngredientsFragment extends Fragment {
-    private final ArrayList<Ingredient> onHandIngredientsList = new ArrayList<>();
-    private FragmentOnHandBinding binding;
+    private ArrayList<Ingredient> onHandArrayList;
     private ListView onHandListView;
+    private FragmentOnHandBinding binding;
+    private static FirebaseDatabase database;
+    private static DatabaseReference onHandDBRef;
+    private AlertDialog addIngredientPopup;
+    private EditText newIngredientName;
+    private EditText newIngredientUnits;
+    private EditText newIngredientQuantity;
+    private int currentQuantity = 0;
 
-    //TODO implement add/remove functionality
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
-        binding = FragmentOnHandBinding.inflate(inflater, container, false);
-        View root1 = binding.getRoot();
-        onHandListView = root1.findViewById(R.id.on_hand_list_view);
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        onHandArrayList = new ArrayList<>();
+        database = FirebaseDatabase.getInstance();
         // TODO replace hardcoded reference with userId
-        DatabaseReference onHand = database.getReference("users").child("1").child("onHandIngredients");
+        onHandDBRef = database.getReference("users").child("1").child("onHandIngredients");
+        binding = FragmentOnHandBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+        onHandListView = root.findViewById(R.id.on_hand_list_view);
+        Button createNewIngredientButton = root.findViewById(R.id.new_ingredient_button);
 
-        onHand.addChildEventListener(new ChildEventListener() {
+        createNewIngredientButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+            public void onClick(View view) {
+                createDialog();
+            }
+        });
 
-                String ingName = snapshot.child("ingredientName").getValue(String.class);
-                String ingUnit = snapshot.child("units").getValue(String.class);
-                String ingQuantity = snapshot.child("quantity").getValue(String.class);
-                onHandIngredientsList.add(new Ingredient(ingName, ingUnit, ingQuantity));
+        onHandDBRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot ds, @Nullable String pcn) {
+                String name = ds.child("ingredientName").getValue(String.class);
+                String units = ds.child("units").getValue(String.class);
+                int quantity = ds.child("quantity").getValue(int.class);
+                String id = ds.getKey();
+                onHandArrayList.add(new Ingredient(name, units, quantity, id));
                 populateOnHandIngredients();
             }
-
             @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+            public void onChildChanged(@NonNull DataSnapshot ds, @Nullable String pcn) {
+              String id = ds.getKey();
+              int quantity = ds.child("quantity").getValue(int.class);
+              for (Ingredient ingredient : onHandArrayList) {
+                  if(ingredient.getId().equals(id)) {
+                      ingredient.setQuantity(quantity);
+                  }
+              }
+              populateOnHandIngredients();
             }
-
             @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                String removed = snapshot.getValue(String.class);
-                onHandIngredientsList.remove(removed);
-               populateOnHandIngredients();
+            public void onChildRemoved(@NonNull DataSnapshot ds) {
+                int index = 0;
+                String id = ds.getKey();
+                for(int i = 0; i < onHandArrayList.size();i++) {
+                    Ingredient ingredient = onHandArrayList.get(i);
+                    if (ingredient.getId().equals(id)) {
+                      index = i;
+                    }
+                }
+                onHandArrayList.remove(index);
+                populateOnHandIngredients();
             }
-
             @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-            }
-
+            public void onChildMoved(@NonNull DataSnapshot ds, @Nullable String pcn) {/* empty */}
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
+            public void onCancelled(@NonNull DatabaseError error) {/* empty */}
         });
         return binding.getRoot();
     }
 
-    //TODO create custom list view for on hand ingredients w/ add, remove and + - quantity buttons
+    public static void addIngredient(Ingredient toAdd) {
+        String id = onHandDBRef.push().getKey();
+        toAdd.setId(id);
+        onHandDBRef.child(id).setValue(toAdd);
+    }
+
+    public static void changeQuantity(int quantity, String id) {
+        onHandDBRef.child(id).child("quantity").setValue(quantity);
+    }
+
+    public static void removeIngredient(String id) {
+        onHandDBRef.child(id).removeValue();
+    }
+
     private void populateOnHandIngredients() {
-        ArrayAdapter arrayAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, onHandIngredientsList);
-        onHandListView.setAdapter(arrayAdapter);
+        if(getContext() != null) {
+            OnHandListAdapter adapter = new OnHandListAdapter(this.getContext(), onHandArrayList);
+            onHandListView.setAdapter(adapter);
+        }
+    }
+
+    public void createDialog(){
+        AlertDialog.Builder popupBuilder = new AlertDialog.Builder(getContext());
+        final View view = getLayoutInflater().inflate(R.layout.new_ingredient_popup, null);
+
+        // Input Fields
+        newIngredientName = (EditText) view.findViewById(R.id.new_ingredient_name);
+        newIngredientQuantity = (EditText) view.findViewById(R.id.current_quantity);
+        newIngredientUnits = (EditText) view.findViewById(R.id.new_ingredient_units);
+
+        // Clickable
+        ImageView increaseQuantity = (ImageView) view.findViewById(R.id.increase_quantity_popup);
+        ImageView decreaseQuantity = (ImageView) view.findViewById(R.id.decrease_quantity_popup);
+        Button addIngredientButton = (Button) view.findViewById(R.id.add_new_ingredient);
+        Button cancelButton = (Button) view.findViewById(R.id.cancel_new_ingredient);
+
+        // PopupDialog
+        popupBuilder.setView(view);
+        addIngredientPopup = popupBuilder.create();
+        addIngredientPopup.show();
+
+        increaseQuantity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currentQuantity++;
+                newIngredientQuantity.setText(""+currentQuantity);
+            }
+        });
+        decreaseQuantity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               if(currentQuantity > 0) {
+                   currentQuantity--;
+                   newIngredientQuantity.setText(""+currentQuantity);
+               }
+            }
+        });
+        addIngredientButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String ingName = newIngredientName.getText().toString();
+                String ingUnits = newIngredientUnits.getText().toString();
+                int ingQuantity = currentQuantity;
+
+                Boolean emptyName = (ingName.equals(""));
+                Boolean emptyUnits = (ingUnits.equals(""));
+                Boolean emptyQuantity = (ingQuantity == 0);
+
+                //TODO fix toast notification
+                if(emptyName || emptyUnits || emptyQuantity) {
+                    String toastText = "Please enter all required fields.";
+                    Toast.makeText(view.getContext(), toastText, Toast.LENGTH_SHORT).show();
+                } else {
+                    addIngredient(new Ingredient(ingName, ingUnits, ingQuantity, "none"));
+                    currentQuantity = 0;
+                    addIngredientPopup.dismiss();
+                }
+            }
+        });
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currentQuantity = 0;
+                addIngredientPopup.dismiss();
+            }
+        });
     }
     @Override
     public void onDestroyView() {

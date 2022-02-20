@@ -41,47 +41,40 @@ public class SavedRecipesFragment extends Fragment {
         savedRecipesListView = root.findViewById(R.id.saved_recipe_list_view);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         // TODO replace hardcoded reference with userId
-        DatabaseReference savedRecipes = database.getReference("users").child("1").child("savedRecipes");
+        DatabaseReference savedRecipes;
+        savedRecipes = database.getReference("users").child("1").child("savedRecipes");
 
         savedRecipes.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                String name = snapshot.child("name").getValue(String.class);
-                String description = snapshot.child("description").getValue(String.class);
+            public void onChildAdded(@NonNull DataSnapshot ds, @Nullable String pcn) {
+                String name = ds.child("name").getValue(String.class);
+                String description = ds.child("description").getValue(String.class);
                 ArrayList<Ingredient> ingredientsList= new ArrayList<>();
-                DataSnapshot ingredients = snapshot.child("ingredients");
+                DataSnapshot ingredients = ds.child("ingredients");
                 for(DataSnapshot ing : ingredients.getChildren()) {
                     String ingName = ing.child("ingredientName").getValue(String.class);
                     String ingUnit = ing.child("units").getValue(String.class);
-                    String ingQuantity = ing.child("quantity").getValue(String.class);
-                    ingredientsList.add(new Ingredient(ingName, ingUnit, ingQuantity));
+                    int ingQuantity = ing.child("quantity").getValue(int.class);
+                    ingredientsList.add(new Ingredient(ingName, ingUnit, ingQuantity, "none"));
                 }
                 Recipe added = new Recipe(name, description, ingredientsList);
                 savedRecipesArrayList.add(added);
                 populateRecipeList();
             }
-
             @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-            }
-
+            public void onChildChanged(@NonNull DataSnapshot ds, @Nullable String pcn) {/*empty*/}
             @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+            public void onChildRemoved(@NonNull DataSnapshot ds) {
                 //TODO fix this to match suggestions logic
-                Recipe removed = snapshot.getValue(Recipe.class);
+                Recipe removed = ds.getValue(Recipe.class);
                 savedRecipesArrayList.remove(removed);
                 populateRecipeList();
             }
-
             @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-            }
-
+            public void onChildMoved(@NonNull DataSnapshot ds, @Nullable String pcn) {/*empty*/}
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
+            public void onCancelled(@NonNull DatabaseError error) {/*empty*/}
         });
-
         final TextView textView = binding.textDashboard;
         savedRecipesViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
@@ -95,7 +88,9 @@ public class SavedRecipesFragment extends Fragment {
 
     //TODO create custom adapter/listview for recipes
     private void populateRecipeList() {
-        ArrayAdapter arrayAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, savedRecipesArrayList);
-        savedRecipesListView.setAdapter(arrayAdapter);
+        if(getContext()!=null) {
+            ArrayAdapter arrayAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, savedRecipesArrayList);
+            savedRecipesListView.setAdapter(arrayAdapter);
+        }
     }
 }
