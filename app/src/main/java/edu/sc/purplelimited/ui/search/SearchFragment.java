@@ -26,11 +26,10 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import edu.sc.purplelimited.R;
+import edu.sc.purplelimited.classes.Ingredient;
 import edu.sc.purplelimited.classes.Recipe;
 import edu.sc.purplelimited.databinding.FragmentSearchBinding;
-import edu.sc.purplelimited.ui.swipe_ui.Adapter;
 import edu.sc.purplelimited.ui.swipe_ui.CardViewAdapter;
-import edu.sc.purplelimited.ui.swipe_ui.Model;
 import edu.sc.purplelimited.ui.swipe_ui.RecipeCard;
 
 public class SearchFragment extends Fragment {
@@ -38,7 +37,7 @@ public class SearchFragment extends Fragment {
   private ViewPager viewPager;
   private EditText searchBar;
   private ViewPager searchResultsCards;
-  private ArrayList<Recipe> recipeArrayList = new ArrayList<>();
+  private ArrayList<Recipe> searchResultsArrayList = new ArrayList<>();
   private View root;
 
   public View onCreateView(@NonNull LayoutInflater inflater,
@@ -50,7 +49,6 @@ public class SearchFragment extends Fragment {
     searchBar = root.findViewById(R.id.search_recipe_text);
     Button searchButton = root.findViewById(R.id.search_button);
     searchResultsCards = root.findViewById(R.id.view_pager_suggestions);
-
 
     searchButton.setOnClickListener(view -> {
       FetchRecipes fetchRecipes = new FetchRecipes();
@@ -102,32 +100,56 @@ public class SearchFragment extends Fragment {
 
     @Override
     protected void onPostExecute(String s) {
-      recipeArrayList.clear();
+      //TODO: refine keyword comparison when performing search
+      searchResultsArrayList.clear();
       try {
         JSONObject resultsJSON = new JSONObject(s);
         JSONArray recipesArrayJSON = resultsJSON.getJSONArray("results");
         for (int i = 0; i < recipesArrayJSON.length(); i++) {
-          JSONObject recipe = recipesArrayJSON.getJSONObject(i);
-          String name = recipe.getString("name");
-          String description = recipe.getString("description");
-          ArrayList<String> ingredients = new ArrayList<>();
+          JSONObject currentRecipeObj = recipesArrayJSON.getJSONObject(i);
+          String recipeName = currentRecipeObj.getString("name");
+          String recipeDesc = currentRecipeObj.getString("description");
+          ArrayList<Ingredient> recipeIngredients = new ArrayList<>();
           try {
-            JSONArray sections = recipe.getJSONArray("sections");
-            if (sections != null) {
-              for (int j = 0; j < sections.length(); j++) {
-                JSONObject section = sections.getJSONObject(j);
+            JSONArray sectionsArray = currentRecipeObj.getJSONArray("sections");
+            if (sectionsArray != null) {
+              for (int j = 0; j < sectionsArray.length(); j++) {
+                JSONObject section = sectionsArray.getJSONObject(j);
                 JSONArray components = section.getJSONArray("components");
                 for (int k = 0; k < components.length(); k++) {
                   JSONObject component = components.getJSONObject(k);
-                  String ingredient = component.getString("raw_text");
-                  ingredients.add(ingredient);
+                  JSONObject componentIng = component.getJSONObject("ingredient");
+                  String ingName;
+                  String ingUnit;
+                  int ingQuantity;
+                  if (componentIng.getString("display_singular").equals("") ) {
+                    ingName = componentIng.getString("display_plural");
+                  } else {
+                    ingName = componentIng.getString("display_singular");
+                  }
+                  JSONArray compMeasureArray = component.getJSONArray("measurements");
+                  JSONObject componentMeasurement = compMeasureArray.getJSONObject(0);
+                  JSONObject componentUnit = componentMeasurement.getJSONObject("unit");
+                  if (componentUnit.getString("name").equals("") ) {
+                    ingUnit = "none";
+                  } else {
+                    ingUnit = componentUnit.getString("name");
+                  }
+                  try {
+                    ingQuantity = componentMeasurement.getInt("quantity");
+                  } catch (Exception e) {
+                    ingQuantity = 1;
+                  }
+                  Ingredient toAdd = new Ingredient(ingName, ingUnit, ingQuantity, "none");
+                  recipeIngredients.add(toAdd);
                 }
               }
-              recipeArrayList.add(new Recipe(name, description, ingredients));
             }
           } catch (JSONException e) {
             continue;
           }
+          Recipe toAdd = new Recipe(recipeName, recipeDesc, recipeIngredients);
+          searchResultsArrayList.add(toAdd);
         }
         populateSearchResults();
       } catch (JSONException e) {
@@ -139,12 +161,18 @@ public class SearchFragment extends Fragment {
   private void populateSearchResults() {
     ArrayList<RecipeCard> recipeCards = new ArrayList<>();
     for(int i = 0; i < 5; i++) {
-      Recipe recipe = recipeArrayList.get(i);
-      recipeCards.add(new RecipeCard(recipe.getName(), recipe.getDescription(), recipe.getIngredients()));
+      Recipe recipe = searchResultsArrayList.get(i);
+      String name = recipe.getName();
+      String description = recipe.getDescription();
+      ArrayList<Ingredient> ingredients = recipe.getIngredients();
+      RecipeCard toAdd = new RecipeCard(name, description, ingredients);
+      recipeCards.add(toAdd);
     }
-    CardViewAdapter cardViewAdapter = new CardViewAdapter(getContext(), recipeCards);
-    searchResultsCards.setAdapter(cardViewAdapter);
-    searchResultsCards.setPadding(50,0, 50, 0);
+    if(getContext()!=null) {
+      CardViewAdapter cardViewAdapter = new CardViewAdapter(getContext(), recipeCards);
+      searchResultsCards.setAdapter(cardViewAdapter);
+      searchResultsCards.setPadding(50,0, 50, 0);
+    }
   }
 
   @Override
