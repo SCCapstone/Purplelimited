@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="15dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:id="@+id/top_container">
+
+        <ImageView
+            android:id="@+id/saved_rec_thumbnail"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="311dp"
+            android:layout_toLeftOf="@+id/saved_rec_name"
+            android:src="@drawable/ic_baseline_food_bank_24" />
+
+        <TextView
+            android:id="@+id/saved_rec_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            tools:ignore="InvalidId"
+            android:layout_toLeftOf="@id/saved_rec_remove"/>
+
+        <ImageView
+            android:id="@+id/saved_rec_remove"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/remove_icon" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_below="@id/top_container">
+        <TextView
+            android:id="@+id/saved_rec_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            tools:ignore="InvalidId"
+            />
+
+
+
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

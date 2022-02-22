@@ -1,9 +1,11 @@
 package edu.sc.purplelimited.ui.saved_recipes;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,21 +29,21 @@ import edu.sc.purplelimited.databinding.FragmentSavedRecipesBinding;
 import java.util.ArrayList;
 
 public class SavedRecipesFragment extends Fragment {
-    private final ArrayList<Recipe> savedRecipesArrayList = new ArrayList<>();
+    private final ArrayList<Recipe> savedArrayList = new ArrayList<>();
     private FragmentSavedRecipesBinding binding;
     private ListView savedRecipesListView;
-
-    //TODO implement add/remove functionality
+    private static FirebaseDatabase database;
+    private static DatabaseReference savedRecipes;
+    private AlertDialog recipeViewPopup;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        SavedRecipesViewModel savedRecipesViewModel =
-                new ViewModelProvider(this).get(SavedRecipesViewModel.class);
+        SavedRecipesViewModel savedVM;
+        savedVM = new ViewModelProvider(this).get(SavedRecipesViewModel.class);
         binding = FragmentSavedRecipesBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        database = FirebaseDatabase.getInstance();
         savedRecipesListView = root.findViewById(R.id.saved_recipe_list_view);
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
         // TODO replace hardcoded reference with userId
-        DatabaseReference savedRecipes;
         savedRecipes = database.getReference("users").child("1").child("savedRecipes");
 
         savedRecipes.addChildEventListener(new ChildEventListener() {
@@ -49,6 +51,7 @@ public class SavedRecipesFragment extends Fragment {
             public void onChildAdded(@NonNull DataSnapshot ds, @Nullable String pcn) {
                 String name = ds.child("name").getValue(String.class);
                 String description = ds.child("description").getValue(String.class);
+                String id = ds.child("id").getValue(String.class);
                 ArrayList<Ingredient> ingredientsList= new ArrayList<>();
                 DataSnapshot ingredients = ds.child("ingredients");
                 for(DataSnapshot ing : ingredients.getChildren()) {
@@ -57,17 +60,23 @@ public class SavedRecipesFragment extends Fragment {
                     int ingQuantity = ing.child("quantity").getValue(int.class);
                     ingredientsList.add(new Ingredient(ingName, ingUnit, ingQuantity, "none"));
                 }
-                Recipe added = new Recipe(name, description, ingredientsList);
-                savedRecipesArrayList.add(added);
+                Recipe added = new Recipe(name, description, ingredientsList, id);
+                savedArrayList.add(added);
                 populateRecipeList();
             }
             @Override
             public void onChildChanged(@NonNull DataSnapshot ds, @Nullable String pcn) {/*empty*/}
             @Override
             public void onChildRemoved(@NonNull DataSnapshot ds) {
-                //TODO fix this to match suggestions logic
-                Recipe removed = ds.getValue(Recipe.class);
-                savedRecipesArrayList.remove(removed);
+                int index = 0;
+                String id = ds.getKey();
+                for(int i = 0; i < savedArrayList.size(); i++) {
+                    Recipe recipe = savedArrayList.get(i);
+                    if (recipe.getId().equals(id)) {
+                        index = i;
+                    }
+                }
+                savedArrayList.remove(index);
                 populateRecipeList();
             }
             @Override
@@ -75,8 +84,15 @@ public class SavedRecipesFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {/*empty*/}
         });
+        savedRecipesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Recipe recipe = savedArrayList.get(i);
+                createPopup(recipe);
+            }
+        });
         final TextView textView = binding.textDashboard;
-        savedRecipesViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        savedVM.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
@@ -86,11 +102,43 @@ public class SavedRecipesFragment extends Fragment {
         binding = null;
     }
 
-    //TODO create custom adapter/listview for recipes
-    private void populateRecipeList() {
+    public void populateRecipeList() {
         if(getContext()!=null) {
-            ArrayAdapter arrayAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, savedRecipesArrayList);
-            savedRecipesListView.setAdapter(arrayAdapter);
+            SavedRecipesListAdapter adapter;
+            adapter = new SavedRecipesListAdapter(getContext(), savedArrayList);
+            savedRecipesListView.setAdapter(adapter);
         }
+    }
+
+    public static void removeRecipe(String id) {
+        savedRecipes.child(id).removeValue();
+    }
+
+    private void createPopup(Recipe recipe){
+        AlertDialog.Builder popupBuilder = new AlertDialog.Builder((getContext()));
+        final View view = getLayoutInflater().inflate(R.layout.saved_recipe_popup, null);
+
+        ArrayList<String> ingToString = new ArrayList<>();
+        ArrayList<Ingredient> ingredientsList = recipe.getIngredients();
+        for (Ingredient ingredient : ingredientsList) {
+            String toString = ingredient.toString();
+            System.out.println("Ingredient: " + toString);
+            ingToString.add(toString);
+        }
+        // Name and description
+        TextView recipeName = (TextView) view.findViewById(R.id.popup_title);
+        recipeName.setText(recipe.getName());
+        TextView recipeDescription = (TextView) view.findViewById(R.id.popup_description);
+
+        // Ingredients
+        recipeDescription.setText(recipe.getDescription());
+        ListView ingredients = (ListView) view.findViewById(R.id.popup_ingredients);
+
+        ArrayAdapter adapter;
+        adapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, ingToString);
+        ingredients.setAdapter(adapter);
+        popupBuilder.setView(view);
+        recipeViewPopup = popupBuilder.create();
+        recipeViewPopup.show();
     }
 }
