@@ -37,7 +37,7 @@ public class RegistrationActivity extends AppCompatActivity {
         userAccount = new UserAccount();
 
         //TODO implement Firebase's drop-in authentication solution
-        sharedPreferences = getApplicationContext().getSharedPreferences("UserAccountEX", MODE_PRIVATE);
+        sharedPreferences = getApplicationContext().getSharedPreferences("UserAccount", MODE_PRIVATE);
         sharedPreferencesEditor = sharedPreferences.edit();
 
         // Clicking the Register Button
