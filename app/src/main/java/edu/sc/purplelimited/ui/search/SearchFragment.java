@@ -148,7 +148,7 @@ public class SearchFragment extends Fragment {
           } catch (JSONException e) {
             continue;
           }
-          Recipe toAdd = new Recipe(recipeName, recipeDesc, recipeIngredients);
+          Recipe toAdd = new Recipe(recipeName, recipeDesc, recipeIngredients, "none");
           searchResultsArrayList.add(toAdd);
         }
         populateSearchResults();
