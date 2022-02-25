@@ -6,9 +6,9 @@
     android:padding="15dp">
 
     <RelativeLayout
+        android:id="@+id/top_container"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:id="@+id/top_container">
+        android:layout_height="100dp">
 
         <ImageView
             android:id="@+id/saved_rec_thumbnail"
@@ -25,10 +25,10 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/saved_rec_remove"
             android:textColor="@color/black"
             android:textSize="16sp"
-            tools:ignore="InvalidId"
-            android:layout_toLeftOf="@id/saved_rec_remove"/>
+            tools:ignore="InvalidId" />
 
         <ImageView
             android:id="@+id/saved_rec_remove"

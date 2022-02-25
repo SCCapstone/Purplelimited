@@ -7,10 +7,12 @@
     android:layout_height="match_parent"
     tools:context="edu.sc.purplelimited.ui.suggestions.SuggestionsFragment">
 
+
     <Button
         android:id="@+id/save_recipe_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="onClick"
         android:text="Save Recipe"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -43,8 +45,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="SpeakableTextPresentCheck">
-
+        tools:ignore="SpeakableTextPresentCheck"
+        android:layoutDirection="rtl">
+<!--        </androidx.viewpager2.widget.ViewPager2>-->
     </androidx.viewpager.widget.ViewPager>
 
 

@@ -1,6 +1,8 @@
 package edu.sc.purplelimited.ui.saved_recipes;
 
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +37,13 @@ public class SavedRecipesFragment extends Fragment {
     private static FirebaseDatabase database;
     private static DatabaseReference savedRecipes;
     private AlertDialog recipeViewPopup;
+
+    SharedPreferences sharedPreferences;
+    public static final String SHARED_PREFS = "sharedPrefs";
+    public static final String RECIPE = "recipe";
+
+    TextView saved_rec_name;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         SavedRecipesViewModel savedVM;
@@ -91,6 +100,20 @@ public class SavedRecipesFragment extends Fragment {
                 createPopup(recipe);
             }
         });
+
+        saved_rec_name = root.findViewById(R.id.saved_rec_name);
+        sharedPreferences = getContext().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+
+        String recipeName = sharedPreferences.getString(RECIPE, null);
+//
+//        if (recipeName != null){
+//            saved_rec_name.setText(recipeName);
+//            populateRecipeList();
+//        }
+
+
+
+
         final TextView textView = binding.textDashboard;
         savedVM.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
