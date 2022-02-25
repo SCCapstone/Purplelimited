@@ -10,8 +10,11 @@ import static org.junit.Assert.*;
 public class IngredientTest {
     private Ingredient ingredient = new Ingredient("ground beef", "lb", 1, "001");
 
+    String expected = "1 lb ground beef";
+    String actual = ingredient.toString();
+
     @Test
     public void ingredient_toString_test() {
-        
+        assertEquals(expected, actual);
     }
 }
