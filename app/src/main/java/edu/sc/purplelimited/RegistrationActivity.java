@@ -8,7 +8,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -17,9 +24,9 @@ public class RegistrationActivity extends AppCompatActivity {
     private EditText RegistrationPassword;
     private EditText RegistrationPassword2;
     private Button Register2;
-
+    private static FirebaseDatabase database;
+    private static DatabaseReference usersReference;
     public UserAccount userAccount;
-
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor sharedPreferencesEditor;
 
@@ -40,6 +47,10 @@ public class RegistrationActivity extends AppCompatActivity {
         sharedPreferences = getApplicationContext().getSharedPreferences("UserAccount", MODE_PRIVATE);
         sharedPreferencesEditor = sharedPreferences.edit();
 
+        // Instantiate Firebase database instance and users reference
+        database = FirebaseDatabase.getInstance();
+        usersReference = database.getReference("users");
+
         // Clicking the Register Button
         Register2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,18 +67,33 @@ public class RegistrationActivity extends AppCompatActivity {
                         Toast.makeText(RegistrationActivity.this, "This username is already in use!", Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        // Add the credentials into our database
-                        userAccount.addAccount(userName, userPassword);
+                        DatabaseReference check = database.getReference("users").child(userName);
+                        check.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                // check to see if the username already exists
+                                DataSnapshot flag = snapshot.child("flag");
+                                if(flag.exists()) {
+                                    Toast.makeText(RegistrationActivity.this, "This username is already in use!", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    // Add the credentials into local database
+                                    userAccount.addAccount(userName, userPassword);
 
-                        // Storing credentials and adds them to the HashMap
-                        sharedPreferencesEditor.putString(userName, userPassword);
-                        sharedPreferencesEditor.putString("SavedUsername", "");
-                        sharedPreferencesEditor.putString("SavedPassword", "");
-                        sharedPreferencesEditor.apply();
+                                    // Storing credentials and adds them to the HashMap
+                                    sharedPreferencesEditor.putString(userName, userPassword);
+                                    sharedPreferencesEditor.putString("SavedUsername", "");
+                                    sharedPreferencesEditor.putString("SavedPassword", "");
+                                    sharedPreferencesEditor.apply();
 
-                        // Go to Login Activity
-                        Toast.makeText(RegistrationActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
+                                    // Go to Login Activity
+                                    Toast.makeText(RegistrationActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
+                                }
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {/*empty*/}
+                        });
+                        usersReference.child(userName).child("userName").setValue(userName);
                     }
                 }
             }

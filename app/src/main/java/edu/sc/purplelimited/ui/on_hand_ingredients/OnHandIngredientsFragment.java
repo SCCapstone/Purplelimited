@@ -21,6 +21,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+
+import edu.sc.purplelimited.LoginActivity;
 import edu.sc.purplelimited.R;
 import edu.sc.purplelimited.classes.Ingredient;
 import edu.sc.purplelimited.databinding.FragmentOnHandBinding;
@@ -43,8 +45,8 @@ public class OnHandIngredientsFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         onHandArrayList = new ArrayList<>();
         database = FirebaseDatabase.getInstance();
-        // TODO replace hardcoded reference with userId
-        onHandDBRef = database.getReference("users").child("1").child("onHandIngredients");
+        String userName = LoginActivity.getCurrentUserName();
+        onHandDBRef = database.getReference("users").child(userName).child("onHandIngredients");
         binding = FragmentOnHandBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         onHandListView = root.findViewById(R.id.on_hand_list_view);

@@ -30,22 +30,26 @@ public class SavedRecipesListAdapter extends ArrayAdapter {
   @NonNull
   @Override
   public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    View row = null;
     if(convertView == null) {
       LayoutInflater inflater;
-      inflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-      convertView = inflater.inflate(R.layout.saved_recipes_lv, null);
+      inflater = ((Activity) context).getLayoutInflater();
+      row = inflater.inflate(R.layout.saved_recipes_lv, parent, false);
+    } else {
+      row = convertView;
+    }
 
       // Text
-      TextView savedName = convertView.findViewById(R.id.saved_rec_name);
+      TextView savedName = row.findViewById(R.id.saved_rec_name);
       savedName.setText(savedRecipesList.get(position).getName());
-      TextView savedDescription = convertView.findViewById(R.id.saved_rec_description);
+      TextView savedDescription = row.findViewById(R.id.saved_rec_description);
       savedDescription.setText(savedRecipesList.get(position).getDescription());
 
       // Clickable
-      ImageView removeIcon = convertView.findViewById(R.id.saved_rec_remove);
+      ImageView removeIcon = row.findViewById(R.id.saved_rec_remove);
 
       // Thumbnail
-      ImageView thumbnail = convertView.findViewById(R.id.saved_rec_thumbnail);
+      ImageView thumbnail = row.findViewById(R.id.saved_rec_thumbnail);
 
       //TODO Confirmation Dialog Popup
       removeIcon.setOnClickListener(new View.OnClickListener() {
@@ -55,7 +59,7 @@ public class SavedRecipesListAdapter extends ArrayAdapter {
           SavedRecipesFragment.removeRecipe(id);
         }
       });
-    }
-    return convertView;
+
+    return row;
   }
 }

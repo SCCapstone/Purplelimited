@@ -12,6 +12,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
@@ -24,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private CheckBox RememberMe;
     private int cnt = 3; //base amount of login attempts
 
-    String userName = "admin";
+    static String userName = "admin";
     String userPassword = "admin"; //these are hard-coded for testing
 
     boolean isValid = false;
@@ -33,6 +36,9 @@ public class LoginActivity extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor sharedPreferencesEditor;
+
+    FirebaseDatabase database;
+    DatabaseReference usersReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +109,11 @@ public class LoginActivity extends AppCompatActivity {
                     else {
                         Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
 
+                        // Set registration flag
+                        database = FirebaseDatabase.getInstance();
+                        usersReference = database.getReference("users");
+                        usersReference.child(userName).child("flag").setValue("true");
+
                         // Send user to the next activity
                         Intent intent = new Intent();
                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
@@ -133,5 +144,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean validate(String userName, String userPassword) {
         return userAccount.checkAccount(userName, userPassword); // moved validate from here to the UserAccount.java
+    }
+
+    public static String getCurrentUserName() {
+        return userName;
     }
 }

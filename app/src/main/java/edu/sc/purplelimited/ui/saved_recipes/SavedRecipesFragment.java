@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import edu.sc.purplelimited.LoginActivity;
 import edu.sc.purplelimited.R;
 import edu.sc.purplelimited.classes.Ingredient;
 import edu.sc.purplelimited.classes.Recipe;
@@ -52,8 +53,8 @@ public class SavedRecipesFragment extends Fragment {
         View root = binding.getRoot();
         database = FirebaseDatabase.getInstance();
         savedRecipesListView = root.findViewById(R.id.saved_recipe_list_view);
-        // TODO replace hardcoded reference with userId
-        savedRecipes = database.getReference("users").child("1").child("savedRecipes");
+        String userName = LoginActivity.getCurrentUserName();
+        savedRecipes = database.getReference("users").child(userName).child("savedRecipes");
 
         savedRecipes.addChildEventListener(new ChildEventListener() {
             @Override
@@ -145,7 +146,6 @@ public class SavedRecipesFragment extends Fragment {
         ArrayList<Ingredient> ingredientsList = recipe.getIngredients();
         for (Ingredient ingredient : ingredientsList) {
             String toString = ingredient.toString();
-            System.out.println("Ingredient: " + toString);
             ingToString.add(toString);
         }
         // Name and description
