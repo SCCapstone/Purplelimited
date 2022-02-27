@@ -30,51 +30,53 @@ public class OnHandListAdapter extends ArrayAdapter {
   @NonNull
   @Override
   public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    View row = null;
     if(convertView == null) {
       LayoutInflater inflater;
       inflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-      convertView = inflater.inflate(R.layout.on_hand_list_view, null );
+      row = inflater.inflate(R.layout.on_hand_list_view, null);
+    } else {
+      row = convertView;
+    }
+    // Text
+    TextView ingredientString = row.findViewById(R.id.ingredient_name_in_listview);
+    ingredientString.setText(onHandList.get(position).toString());
 
-      // Text
-      TextView ingredientString = convertView.findViewById(R.id.ingredient_name_in_listview);
-      ingredientString.setText(onHandList.get(position).toString());
+    // Clickable
+    ImageView increaseQuantity = row.findViewById(R.id.increase_quantity_list_view);
+    ImageView decreaseQuantity = row.findViewById(R.id.decrease_quantity_list_view);
+    ImageView removeItem = row.findViewById(R.id.remove);
 
-      // Clickable
-      ImageView increaseQuantity = convertView.findViewById(R.id.increase_quantity_list_view);
-      ImageView decreaseQuantity = convertView.findViewById(R.id.decrease_quantity_list_view);
-      ImageView removeItem = convertView.findViewById(R.id.remove);
-
-      increaseQuantity.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-          String id = onHandList.get(position).getId();
-          int quantity = onHandList.get(position).getQuantity();
-          quantity++;
+    increaseQuantity.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        String id = onHandList.get(position).getId();
+        int quantity = onHandList.get(position).getQuantity();
+        quantity++;
+        OnHandIngredientsFragment.changeQuantity(quantity, id);
+      }
+    });
+    decreaseQuantity.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        String id = onHandList.get(position).getId();
+        int quantity = onHandList.get(position).getQuantity();
+        if (quantity > 0) {
+          quantity--;
           OnHandIngredientsFragment.changeQuantity(quantity, id);
-        }
-      });
-      decreaseQuantity.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-          String id = onHandList.get(position).getId();
-          int quantity = onHandList.get(position).getQuantity();
-          if (quantity > 0) {
-            quantity--;
-            OnHandIngredientsFragment.changeQuantity(quantity, id);
-          } else {
-            // remove item from list if quantity goes below 0
-            OnHandIngredientsFragment.removeIngredient(id);
-          }
-        }
-      });
-      removeItem.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-          String id = onHandList.get(position).getId();
+        } else {
+          // remove item from list if quantity goes below 0
           OnHandIngredientsFragment.removeIngredient(id);
         }
-      });
-    }
-    return convertView;
+      }
+    });
+    removeItem.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        String id = onHandList.get(position).getId();
+        OnHandIngredientsFragment.removeIngredient(id);
+      }
+    });
+    return row;
   }
 }
