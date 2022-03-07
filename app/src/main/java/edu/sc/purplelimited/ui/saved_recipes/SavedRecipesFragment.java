@@ -39,12 +39,6 @@ public class SavedRecipesFragment extends Fragment {
     private static DatabaseReference savedRecipes;
     private AlertDialog recipeViewPopup;
 
-    SharedPreferences sharedPreferences;
-    public static final String SHARED_PREFS = "sharedPrefs";
-    public static final String RECIPE = "recipe";
-
-    TextView saved_rec_name;
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         SavedRecipesViewModel savedVM;
@@ -102,19 +96,6 @@ public class SavedRecipesFragment extends Fragment {
             }
         });
 
-        saved_rec_name = root.findViewById(R.id.saved_rec_name);
-        sharedPreferences = getContext().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
-
-        String recipeName = sharedPreferences.getString(RECIPE, null);
-//
-//        if (recipeName != null){
-//            saved_rec_name.setText(recipeName);
-//            populateRecipeList();
-//        }
-
-
-
-
         final TextView textView = binding.textDashboard;
         savedVM.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
@@ -136,6 +117,18 @@ public class SavedRecipesFragment extends Fragment {
 
     public static void removeRecipe(String id) {
         savedRecipes.child(id).removeValue();
+    }
+
+    public static void addRecipe(Recipe toAdd) {
+        if (savedRecipes == null) {
+            // TODO move this to an instantiateDatabase method
+            database = FirebaseDatabase.getInstance();
+            String userName = LoginActivity.getCurrentUserName();
+            savedRecipes = database.getReference("users").child(userName).child("savedRecipes");
+        }
+        String id = savedRecipes.push().getKey();
+        toAdd.setId(id);
+        savedRecipes.child(id).setValue(toAdd);
     }
 
     private void createPopup(Recipe recipe){
