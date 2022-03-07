@@ -29,6 +29,7 @@ import edu.sc.purplelimited.R;
 import edu.sc.purplelimited.classes.Ingredient;
 import edu.sc.purplelimited.classes.Recipe;
 import edu.sc.purplelimited.databinding.FragmentSearchBinding;
+import edu.sc.purplelimited.ui.saved_recipes.SavedRecipesFragment;
 import edu.sc.purplelimited.ui.swipe_ui.CardViewAdapter;
 import edu.sc.purplelimited.ui.swipe_ui.RecipeCard;
 
@@ -173,6 +174,14 @@ public class SearchFragment extends Fragment {
       searchResultsCards.setAdapter(cardViewAdapter);
       searchResultsCards.setPadding(50,0, 50, 0);
     }
+    Button saveRecipe = (Button) root.findViewById(R.id.save_search_result);
+    saveRecipe.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        Recipe savedRecipe = searchResultsArrayList.get(searchResultsCards.getCurrentItem());
+        SavedRecipesFragment.addRecipe(savedRecipe);
+      }
+    });
   }
 
   @Override
