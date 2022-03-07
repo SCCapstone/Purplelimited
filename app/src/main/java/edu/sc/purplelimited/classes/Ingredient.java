@@ -14,7 +14,11 @@ public class Ingredient {
 
   public Ingredient(String ingredientName, String units, int quantity, String id) {
     this.ingredientName = ingredientName;
-    this.units = units;
+    if (!units.endsWith("s")) {
+      this.units = units;
+    } else {
+      this.units = units.substring(0, units.length()-1);
+    }
     this.quantity = quantity;
     this.id = id;
   }
