@@ -16,29 +16,32 @@
 
 
     <ImageView
-        android:layout_width="22sp"
-        android:layout_height="22sp"
         android:id="@+id/decrease_quantity_list_view"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_centerVertical="true"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="10dp"
         android:layout_toLeftOf="@+id/increase_quantity_list_view"
-        android:src="@drawable/decrease_quantity"
-        />
+        android:src="@drawable/decrease_quantity" />
 
     <ImageView
-        android:layout_width="22sp"
-        android:layout_height="22sp"
         android:id="@+id/increase_quantity_list_view"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_centerVertical="true"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="10dp"
         android:layout_toLeftOf="@id/remove"
-        android:src="@drawable/increase_quantity"
-        />
+        android:src="@drawable/increase_quantity" />
 
     <ImageView
-        android:layout_width="22sp"
-        android:layout_height="22sp"
         android:id="@+id/remove"
-        android:layout_centerVertical="true"
-        android:src="@drawable/remove_icon"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_alignParentRight="true"
-        />
+        android:layout_centerVertical="true"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="10dp"
+        android:src="@drawable/remove_icon" />
 </RelativeLayout>

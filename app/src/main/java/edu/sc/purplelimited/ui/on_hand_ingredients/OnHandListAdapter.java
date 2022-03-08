@@ -40,7 +40,11 @@ public class OnHandListAdapter extends ArrayAdapter {
     }
     // Text
     TextView ingredientString = row.findViewById(R.id.ingredient_name_in_listview);
-    ingredientString.setText(onHandList.get(position).toString());
+    String ingredientText = onHandList.get(position).toString();
+    if (ingredientText.length() > 28) {
+      ingredientText = ingredientText.substring(0, 28) + "...";
+    }
+    ingredientString.setText(ingredientText);
 
     // Clickable
     ImageView increaseQuantity = row.findViewById(R.id.increase_quantity_list_view);
