@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Binding the XML views
         Logout = findViewById(R.id.logoutbutton);
+        loggedIn = true;
 
         while(loggedIn = true) {                                  //changed to a while loop
             setContentView(binding.getRoot());
