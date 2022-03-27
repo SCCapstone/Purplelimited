@@ -110,6 +110,13 @@ public class SearchFragment extends Fragment {
           JSONObject currentRecipeObj = recipesArrayJSON.getJSONObject(i);
           String recipeName = currentRecipeObj.getString("name");
           String recipeDesc = currentRecipeObj.getString("description");
+          String thumbnail = currentRecipeObj.getString("beauty_url");
+          if (thumbnail.equals("null")) {
+            thumbnail = currentRecipeObj.getString("thumbnail_url");
+          }
+          if(thumbnail.equals("null")) {
+            thumbnail = "none";
+          }
           ArrayList<Ingredient> recipeIngredients = new ArrayList<>();
           try {
             JSONArray sectionsArray = currentRecipeObj.getJSONArray("sections");
@@ -149,7 +156,7 @@ public class SearchFragment extends Fragment {
           } catch (JSONException e) {
             continue;
           }
-          Recipe toAdd = new Recipe(recipeName, recipeDesc, recipeIngredients, "none");
+          Recipe toAdd = new Recipe(recipeName, recipeDesc, recipeIngredients, "none", thumbnail);
           searchResultsArrayList.add(toAdd);
         }
         populateSearchResults();

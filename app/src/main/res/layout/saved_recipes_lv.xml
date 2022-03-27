@@ -30,7 +30,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginHorizontal="5dp"
         android:layout_marginVertical="5dp">
-
+        <!--TODO shorten long titles to prevent them from going under other ui elements-->
         <TextView
             android:id="@+id/saved_rec_name"
             android:layout_width="wrap_content"

@@ -56,6 +56,7 @@ public class SavedRecipesFragment extends Fragment {
                 String name = ds.child("name").getValue(String.class);
                 String description = ds.child("description").getValue(String.class);
                 String id = ds.child("id").getValue(String.class);
+                String thumbnail = ds.child("thumbnailURL").getValue(String.class);
                 ArrayList<Ingredient> ingredientsList= new ArrayList<>();
                 DataSnapshot ingredients = ds.child("ingredients");
                 for(DataSnapshot ing : ingredients.getChildren()) {
@@ -64,7 +65,7 @@ public class SavedRecipesFragment extends Fragment {
                     int ingQuantity = ing.child("quantity").getValue(int.class);
                     ingredientsList.add(new Ingredient(ingName, ingUnit, ingQuantity, "none"));
                 }
-                Recipe added = new Recipe(name, description, ingredientsList, id);
+                Recipe added = new Recipe(name, description, ingredientsList, id, thumbnail);
                 savedArrayList.add(added);
                 populateRecipeList();
             }

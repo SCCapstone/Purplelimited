@@ -2,6 +2,7 @@ package edu.sc.purplelimited.ui.saved_recipes;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
+
 import java.util.ArrayList;
 
 import edu.sc.purplelimited.R;
+import edu.sc.purplelimited.classes.ImageQueue;
 import edu.sc.purplelimited.classes.Recipe;
 
 public class SavedRecipesListAdapter extends ArrayAdapter {
@@ -50,15 +56,27 @@ public class SavedRecipesListAdapter extends ArrayAdapter {
 
       // Thumbnail
       ImageView thumbnail = row.findViewById(R.id.saved_rec_thumbnail);
-
-      //TODO Confirmation Dialog Popup
-      removeIcon.setOnClickListener(new View.OnClickListener() {
+      String url = savedRecipesList.get(position).getThumbnailURL();
+      ImageRequest imageRequest = new ImageRequest(url,
+              new Response.Listener<Bitmap>() {
+                @Override
+                public void onResponse(Bitmap response) {
+                  thumbnail.setImageBitmap(response);
+                }
+              }, 0, 0, ImageView.ScaleType.CENTER_CROP, null, new Response.ErrorListener() {
         @Override
-        public void onClick(View view) {
-          String id = savedRecipesList.get(position).getId();
-          SavedRecipesFragment.removeRecipe(id);
-        }
+        public void onErrorResponse(VolleyError error) {/*empty*/}
       });
+    ImageQueue.getInstance(getContext()).addToQueue(imageRequest);
+
+    //TODO Confirmation Dialog Popup
+    removeIcon.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        String id = savedRecipesList.get(position).getId();
+        SavedRecipesFragment.removeRecipe(id);
+      }
+    });
 
     return row;
   }
