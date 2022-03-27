@@ -6,57 +6,69 @@
     android:padding="15dp">
 
     <RelativeLayout
-        android:id="@+id/top_container"
+        android:id="@+id/image_container"
         android:layout_width="match_parent"
-        android:layout_height="100dp">
+        android:layout_height="150dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true">
 
         <ImageView
             android:id="@+id/saved_rec_thumbnail"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="311dp"
-            android:layout_toLeftOf="@+id/saved_rec_name"
-            android:src="@drawable/ic_baseline_food_bank_24" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/chicken_salad" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/title_container"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/image_container"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginVertical="5dp">
 
         <TextView
             android:id="@+id/saved_rec_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/saved_rec_remove"
+            android:gravity="center_vertical"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="18sp"
             tools:ignore="InvalidId" />
 
         <ImageView
             android:id="@+id/saved_rec_remove"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:src="@drawable/remove_icon" />
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/description_container"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_below="@id/top_container">
+        android:layout_below="@+id/title_container"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginVertical="5dp">
+
         <TextView
             android:id="@+id/saved_rec_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            tools:ignore="InvalidId"
-            />
-
-
-
-
-
+            android:ellipsize="end"
+            android:maxLines="4"
+            android:textColor="#888888"
+            android:textSize="16sp"/>
     </RelativeLayout>
-
 </RelativeLayout>
