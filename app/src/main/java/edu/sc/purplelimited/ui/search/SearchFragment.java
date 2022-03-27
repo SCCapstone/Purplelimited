@@ -167,28 +167,11 @@ public class SearchFragment extends Fragment {
   }
 
   private void populateSearchResults() {
-    ArrayList<RecipeCard> recipeCards = new ArrayList<>();
-    for(int i = 0; i < 5; i++) {
-      Recipe recipe = searchResultsArrayList.get(i);
-      String name = recipe.getName();
-      String description = recipe.getDescription();
-      ArrayList<Ingredient> ingredients = recipe.getIngredients();
-      RecipeCard toAdd = new RecipeCard(name, description, ingredients);
-      recipeCards.add(toAdd);
-    }
     if(getContext()!=null) {
-      CardViewAdapter cardViewAdapter = new CardViewAdapter(getContext(), recipeCards);
-      searchResultsCards.setAdapter(cardViewAdapter);
+      SearchResultsAdapter searchResultsAdapter = new SearchResultsAdapter(getContext(), searchResultsArrayList);
+      searchResultsCards.setAdapter(searchResultsAdapter);
       searchResultsCards.setPadding(50,0, 50, 0);
     }
-    Button saveRecipe = (Button) root.findViewById(R.id.save_search_result);
-    saveRecipe.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        Recipe savedRecipe = searchResultsArrayList.get(searchResultsCards.getCurrentItem());
-        SavedRecipesFragment.addRecipe(savedRecipe);
-      }
-    });
   }
 
   @Override
