@@ -39,11 +39,10 @@ public class RegistrationActivity extends AppCompatActivity {
         RegistrationUsername = findViewById(R.id.RegistrationName);
         RegistrationPassword = findViewById(R.id.RegistrationPassword);
         RegistrationPassword2 = findViewById(R.id.RegistrationPassword2);
-        Register2 = findViewById(R.id.Register2);
+        Register2 = findViewById(R.id.logoutbutton);
 
         userAccount = new UserAccount();
 
-        //TODO implement Firebase's drop-in authentication solution
         sharedPreferences = getApplicationContext().getSharedPreferences("UserAccount", MODE_PRIVATE);
         sharedPreferencesEditor = sharedPreferences.edit();
 
