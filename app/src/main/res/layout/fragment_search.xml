@@ -50,14 +50,5 @@
         app:layout_constraintVertical_bias="0.059"
         tools:ignore="SpeakableTextPresentCheck" />
 
-    <Button
-        android:id="@+id/save_search_result"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save Recipe"
-        app:layout_constraintBottom_toTopOf="@+id/search_recipe_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_pager_suggestions" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

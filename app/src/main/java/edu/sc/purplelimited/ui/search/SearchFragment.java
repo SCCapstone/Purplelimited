@@ -110,6 +110,13 @@ public class SearchFragment extends Fragment {
           JSONObject currentRecipeObj = recipesArrayJSON.getJSONObject(i);
           String recipeName = currentRecipeObj.getString("name");
           String recipeDesc = currentRecipeObj.getString("description");
+          String thumbnail = currentRecipeObj.getString("beauty_url");
+          if (thumbnail.equals("null")) {
+            thumbnail = currentRecipeObj.getString("thumbnail_url");
+          }
+          if(thumbnail.equals("null")) {
+            thumbnail = "none";
+          }
           ArrayList<Ingredient> recipeIngredients = new ArrayList<>();
           try {
             JSONArray sectionsArray = currentRecipeObj.getJSONArray("sections");
@@ -149,7 +156,7 @@ public class SearchFragment extends Fragment {
           } catch (JSONException e) {
             continue;
           }
-          Recipe toAdd = new Recipe(recipeName, recipeDesc, recipeIngredients, "none");
+          Recipe toAdd = new Recipe(recipeName, recipeDesc, recipeIngredients, "none", thumbnail);
           searchResultsArrayList.add(toAdd);
         }
         populateSearchResults();
@@ -160,28 +167,11 @@ public class SearchFragment extends Fragment {
   }
 
   private void populateSearchResults() {
-    ArrayList<RecipeCard> recipeCards = new ArrayList<>();
-    for(int i = 0; i < 5; i++) {
-      Recipe recipe = searchResultsArrayList.get(i);
-      String name = recipe.getName();
-      String description = recipe.getDescription();
-      ArrayList<Ingredient> ingredients = recipe.getIngredients();
-      RecipeCard toAdd = new RecipeCard(name, description, ingredients);
-      recipeCards.add(toAdd);
-    }
     if(getContext()!=null) {
-      CardViewAdapter cardViewAdapter = new CardViewAdapter(getContext(), recipeCards);
-      searchResultsCards.setAdapter(cardViewAdapter);
+      SearchResultsAdapter searchResultsAdapter = new SearchResultsAdapter(getContext(), searchResultsArrayList);
+      searchResultsCards.setAdapter(searchResultsAdapter);
       searchResultsCards.setPadding(50,0, 50, 0);
     }
-    Button saveRecipe = (Button) root.findViewById(R.id.save_search_result);
-    saveRecipe.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        Recipe savedRecipe = searchResultsArrayList.get(searchResultsCards.getCurrentItem());
-        SavedRecipesFragment.addRecipe(savedRecipe);
-      }
-    });
   }
 
   @Override
