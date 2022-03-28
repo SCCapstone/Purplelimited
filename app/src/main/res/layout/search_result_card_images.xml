@@ -27,7 +27,7 @@
             <TextView
                 android:id="@+id/searchCardTitle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
                 android:padding="8dp"
                 android:textColor="#000"
                 android:textSize="18sp"/>
@@ -35,11 +35,11 @@
             <TextView
                 android:id="@+id/searchCardDescription"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="75dp"
                 android:layout_marginStart="8dp"
                 android:ellipsize="end"
-                android:maxLines="5"
-                android:minLines="3"/>
+                android:maxLines="4"
+                />
 
             <Button
                 android:layout_width="wrap_content"

@@ -63,6 +63,9 @@ public class SearchResultsAdapter extends PagerAdapter {
     // Get current recipe information
     Recipe recipe = searchResults.get(position);
     String title = recipe.getName();
+    if(title.length() > 56) {
+      title = title.substring(0,56) + "...";
+    }
     String description = recipe.getDescription();
     String url = recipe.getThumbnailURL();
 
