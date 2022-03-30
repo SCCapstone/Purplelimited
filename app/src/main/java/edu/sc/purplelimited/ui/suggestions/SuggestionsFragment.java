@@ -76,7 +76,7 @@ public class SuggestionsFragment extends Fragment {
                     int ingQuantity = ing.child("quantity").getValue(int.class);
                     ingredientsList.add(new Ingredient(ingName, ingUnit, ingQuantity, "none"));
                 }
-                Recipe added = new Recipe(name, description, ingredientsList, "none", "none");
+                Recipe added = new Recipe(name, description, ingredientsList, "none", "none", new ArrayList<>());
                 suggestedRecipesList.add(added);
                 populateSuggestionCards();
             }
