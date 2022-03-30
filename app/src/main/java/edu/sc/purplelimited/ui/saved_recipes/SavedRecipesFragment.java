@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +66,13 @@ public class SavedRecipesFragment extends Fragment {
                     int ingQuantity = ing.child("quantity").getValue(int.class);
                     ingredientsList.add(new Ingredient(ingName, ingUnit, ingQuantity, "none"));
                 }
-                Recipe added = new Recipe(name, description, ingredientsList, id, thumbnail);
+                ArrayList<String> instructionsList = new ArrayList<>();
+                DataSnapshot instructions = ds.child("instructions");
+                for(DataSnapshot instruct : instructions.getChildren()) {
+                    String instruction = instruct.getValue(String.class);
+                    instructionsList.add(instruction);
+                }
+                Recipe added = new Recipe(name, description, ingredientsList, id, thumbnail, instructionsList);
                 savedArrayList.add(added);
                 populateRecipeList();
             }

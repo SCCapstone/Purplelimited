@@ -8,6 +8,7 @@ public class Recipe {
     private String name;
     private String description;
     private ArrayList<Ingredient> ingredients;
+    private ArrayList<String> instructions;
     private String thumbnailURL;
 
     public Recipe() {
@@ -16,8 +17,9 @@ public class Recipe {
         this.ingredients = new ArrayList<>();
         this.id = "empty";
         this.thumbnailURL = "none";
+        this.instructions = new ArrayList<>();
     }
-    public Recipe(String title, String description, ArrayList<Ingredient> ingredients, String id, String thumbnailURL) {
+    public Recipe(String title, String description, ArrayList<Ingredient> ingredients, String id, String thumbnailURL, ArrayList<String> instructions) {
         this.name = title;
         if (description.equals("") || description.contains("href") || description.equals("null")) {
             this.description = "A recipe for homemade " + title + ".";
@@ -27,6 +29,7 @@ public class Recipe {
         this.ingredients = ingredients;
         this.id = id;
         this.thumbnailURL = thumbnailURL;
+        this.instructions = instructions;
     }
 
     public void setName(String name) {
@@ -61,5 +64,9 @@ public class Recipe {
 
     public String getThumbnailURL() {
         return thumbnailURL;
+    }
+
+    public ArrayList<String> getInstructions() {
+        return instructions;
     }
 }
