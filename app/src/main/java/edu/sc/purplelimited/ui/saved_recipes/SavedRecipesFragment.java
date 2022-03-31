@@ -1,15 +1,14 @@
 package edu.sc.purplelimited.ui.saved_recipes;
 
 import android.app.AlertDialog;
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,6 +17,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,11 +28,14 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import edu.sc.purplelimited.LoginActivity;
 import edu.sc.purplelimited.R;
+import edu.sc.purplelimited.classes.ImageQueue;
 import edu.sc.purplelimited.classes.Ingredient;
 import edu.sc.purplelimited.classes.Recipe;
 import edu.sc.purplelimited.databinding.FragmentSavedRecipesBinding;
+import edu.sc.purplelimited.ui.PopupListAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SavedRecipesFragment extends Fragment {
     private final ArrayList<Recipe> savedArrayList = new ArrayList<>();
@@ -139,28 +144,57 @@ public class SavedRecipesFragment extends Fragment {
         savedRecipes.child(id).setValue(toAdd);
     }
 
+    // TODO: move to popup builder class to remove duplicate code
     private void createPopup(Recipe recipe){
         AlertDialog.Builder popupBuilder = new AlertDialog.Builder((getContext()));
         final View view = getLayoutInflater().inflate(R.layout.saved_recipe_popup, null);
 
+        // Get the toStrings from each Ingredient in the Recipe
         ArrayList<String> ingToString = new ArrayList<>();
         ArrayList<Ingredient> ingredientsList = recipe.getIngredients();
         for (Ingredient ingredient : ingredientsList) {
             String toString = ingredient.toString();
             ingToString.add(toString);
         }
-        // Name and description
+
+        // Image Preview
+        ImageView preview = (ImageView) view.findViewById(R.id.popup_image);
+        String url = recipe.getThumbnailURL();
+        ImageRequest imageRequest = new ImageRequest(url,
+                new Response.Listener<Bitmap>() {
+                    @Override
+                    public void onResponse(Bitmap response) {
+                        preview.setImageBitmap(response);
+                    }
+                }, 0, 0, ImageView.ScaleType.CENTER_CROP, null, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {/*empty*/}
+        });
+        ImageQueue.getInstance(getContext()).addToQueue(imageRequest);
+
+        // Recipe Name TextView
         TextView recipeName = (TextView) view.findViewById(R.id.popup_title);
         recipeName.setText(recipe.getName());
+
+        // Description TextView
         TextView recipeDescription = (TextView) view.findViewById(R.id.popup_description);
-
-        // Ingredients
         recipeDescription.setText(recipe.getDescription());
-        ListView ingredients = (ListView) view.findViewById(R.id.popup_ingredients);
 
-        ArrayAdapter adapter;
-        adapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, ingToString);
-        ingredients.setAdapter(adapter);
+        // Prepare for Expandable List View
+        ArrayList<String> sectionsList = new ArrayList<>();
+        sectionsList.add("Ingredients");
+        sectionsList.add("Instructions");
+        HashMap<String, ArrayList<String>> sectionsContent = new HashMap<>();
+        ArrayList<String> instructions = recipe.getInstructions();
+        sectionsContent.put(sectionsList.get(0), ingToString);
+        sectionsContent.put(sectionsList.get(1), instructions);
+
+        // Ingredients and Instructions Expandable ListView
+        ExpandableListView expandableListView = (ExpandableListView) view.findViewById(R.id.expanded_list_for_popup);
+        PopupListAdapter popupListAdapter = new PopupListAdapter(getContext(), sectionsList, sectionsContent);
+        expandableListView.setAdapter(popupListAdapter);
+
+        // Create the popup
         popupBuilder.setView(view);
         recipeViewPopup = popupBuilder.create();
         recipeViewPopup.show();

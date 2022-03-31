@@ -45,28 +45,32 @@ public class SavedRecipesListAdapter extends ArrayAdapter {
       row = convertView;
     }
 
-      // Text
-      TextView savedName = row.findViewById(R.id.saved_rec_name);
-      savedName.setText(savedRecipesList.get(position).getName());
-      TextView savedDescription = row.findViewById(R.id.saved_rec_description);
-      savedDescription.setText(savedRecipesList.get(position).getDescription());
+    // Text
+    TextView savedName = row.findViewById(R.id.saved_rec_name);
+    String nameString = savedRecipesList.get(position).getName();
+    if (nameString.length() > 33) {
+      nameString = nameString.substring(0, 33) + "...";
+    }
+    savedName.setText(nameString);
+    TextView savedDescription = row.findViewById(R.id.saved_rec_description);
+    savedDescription.setText(savedRecipesList.get(position).getDescription());
 
-      // Clickable
-      ImageView removeIcon = row.findViewById(R.id.saved_rec_remove);
+    // Clickable
+    ImageView removeIcon = row.findViewById(R.id.saved_rec_remove);
 
-      // Thumbnail
-      ImageView thumbnail = row.findViewById(R.id.saved_rec_thumbnail);
-      String url = savedRecipesList.get(position).getThumbnailURL();
-      ImageRequest imageRequest = new ImageRequest(url,
-              new Response.Listener<Bitmap>() {
-                @Override
-                public void onResponse(Bitmap response) {
-                  thumbnail.setImageBitmap(response);
-                }
-              }, 0, 0, ImageView.ScaleType.CENTER_CROP, null, new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {/*empty*/}
-      });
+    // Thumbnail
+    ImageView thumbnail = row.findViewById(R.id.saved_rec_thumbnail);
+    String url = savedRecipesList.get(position).getThumbnailURL();
+    ImageRequest imageRequest = new ImageRequest(url,
+            new Response.Listener<Bitmap>() {
+              @Override
+              public void onResponse(Bitmap response) {
+                thumbnail.setImageBitmap(response);
+              }
+            }, 0, 0, ImageView.ScaleType.CENTER_CROP, null, new Response.ErrorListener() {
+      @Override
+      public void onErrorResponse(VolleyError error) {/*empty*/}
+    });
     ImageQueue.getInstance(getContext()).addToQueue(imageRequest);
 
     //TODO Confirmation Dialog Popup
