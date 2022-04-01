@@ -29,6 +29,7 @@ import edu.sc.purplelimited.R;
 import edu.sc.purplelimited.classes.Ingredient;
 import edu.sc.purplelimited.classes.Recipe;
 import edu.sc.purplelimited.databinding.FragmentSearchBinding;
+import edu.sc.purplelimited.ui.saved_recipes.SavedRecipesFragment;
 import edu.sc.purplelimited.ui.swipe_ui.CardViewAdapter;
 import edu.sc.purplelimited.ui.swipe_ui.RecipeCard;
 
@@ -101,55 +102,74 @@ public class SearchFragment extends Fragment {
     @Override
     protected void onPostExecute(String s) {
       //TODO: refine keyword comparison when performing search
+      //TODO: minimize try/catch blocks
       searchResultsArrayList.clear();
       try {
         JSONObject resultsJSON = new JSONObject(s);
         JSONArray recipesArrayJSON = resultsJSON.getJSONArray("results");
         for (int i = 0; i < recipesArrayJSON.length(); i++) {
           JSONObject currentRecipeObj = recipesArrayJSON.getJSONObject(i);
-          String recipeName = currentRecipeObj.getString("name");
-          String recipeDesc = currentRecipeObj.getString("description");
-          ArrayList<Ingredient> recipeIngredients = new ArrayList<>();
+          ArrayList<String> recipeInstructions = new ArrayList<String>();
           try {
-            JSONArray sectionsArray = currentRecipeObj.getJSONArray("sections");
-            if (sectionsArray != null) {
-              for (int j = 0; j < sectionsArray.length(); j++) {
-                JSONObject section = sectionsArray.getJSONObject(j);
-                JSONArray components = section.getJSONArray("components");
-                for (int k = 0; k < components.length(); k++) {
-                  JSONObject component = components.getJSONObject(k);
-                  JSONObject componentIng = component.getJSONObject("ingredient");
-                  String ingName;
-                  String ingUnit;
-                  int ingQuantity;
-                  if (componentIng.getString("display_singular").equals("") ) {
-                    ingName = componentIng.getString("display_plural");
-                  } else {
-                    ingName = componentIng.getString("display_singular");
+            JSONArray instructionsArray = currentRecipeObj.getJSONArray("instructions");
+            for (int j = 0; j < instructionsArray.length();j++) {
+              JSONObject currentInstruction = instructionsArray.getJSONObject(j);
+              String instructionText = currentInstruction.getString("display_text");
+              recipeInstructions.add(instructionText);
+            }
+            String recipeName = currentRecipeObj.getString("name");
+            String recipeDesc = currentRecipeObj.getString("description");
+            String thumbnail = currentRecipeObj.getString("beauty_url");
+            if (thumbnail.equals("null")) {
+              thumbnail = currentRecipeObj.getString("thumbnail_url");
+            }
+            if(thumbnail.equals("null")) {
+              thumbnail = "none";
+            }
+            ArrayList<Ingredient> recipeIngredients = new ArrayList<>();
+            try {
+              JSONArray sectionsArray = currentRecipeObj.getJSONArray("sections");
+              if (sectionsArray != null) {
+                for (int j = 0; j < sectionsArray.length(); j++) {
+                  JSONObject section = sectionsArray.getJSONObject(j);
+                  JSONArray components = section.getJSONArray("components");
+                  for (int k = 0; k < components.length(); k++) {
+                    JSONObject component = components.getJSONObject(k);
+                    JSONObject componentIng = component.getJSONObject("ingredient");
+                    String ingName;
+                    String ingUnit;
+                    int ingQuantity;
+                    if (componentIng.getString("display_singular").equals("") ) {
+                      ingName = componentIng.getString("display_plural");
+                    } else {
+                      ingName = componentIng.getString("display_singular");
+                    }
+                    JSONArray compMeasureArray = component.getJSONArray("measurements");
+                    JSONObject componentMeasurement = compMeasureArray.getJSONObject(0);
+                    JSONObject componentUnit = componentMeasurement.getJSONObject("unit");
+                    if (componentUnit.getString("name").equals("") ) {
+                      ingUnit = "none";
+                    } else {
+                      ingUnit = componentUnit.getString("name");
+                    }
+                    try {
+                      ingQuantity = componentMeasurement.getInt("quantity");
+                    } catch (Exception e) {
+                      ingQuantity = 1;
+                    }
+                    Ingredient toAdd = new Ingredient(ingName, ingUnit, ingQuantity, "none");
+                    recipeIngredients.add(toAdd);
                   }
-                  JSONArray compMeasureArray = component.getJSONArray("measurements");
-                  JSONObject componentMeasurement = compMeasureArray.getJSONObject(0);
-                  JSONObject componentUnit = componentMeasurement.getJSONObject("unit");
-                  if (componentUnit.getString("name").equals("") ) {
-                    ingUnit = "none";
-                  } else {
-                    ingUnit = componentUnit.getString("name");
-                  }
-                  try {
-                    ingQuantity = componentMeasurement.getInt("quantity");
-                  } catch (Exception e) {
-                    ingQuantity = 1;
-                  }
-                  Ingredient toAdd = new Ingredient(ingName, ingUnit, ingQuantity, "none");
-                  recipeIngredients.add(toAdd);
                 }
               }
+            } catch (JSONException e) {
+              continue;
             }
-          } catch (JSONException e) {
-            continue;
+            Recipe toAdd = new Recipe(recipeName, recipeDesc, recipeIngredients, "none", thumbnail, recipeInstructions);
+            searchResultsArrayList.add(toAdd);
+          } catch (JSONException e){
+            e.printStackTrace();
           }
-          Recipe toAdd = new Recipe(recipeName, recipeDesc, recipeIngredients);
-          searchResultsArrayList.add(toAdd);
         }
         populateSearchResults();
       } catch (JSONException e) {
@@ -159,18 +179,9 @@ public class SearchFragment extends Fragment {
   }
 
   private void populateSearchResults() {
-    ArrayList<RecipeCard> recipeCards = new ArrayList<>();
-    for(int i = 0; i < 5; i++) {
-      Recipe recipe = searchResultsArrayList.get(i);
-      String name = recipe.getName();
-      String description = recipe.getDescription();
-      ArrayList<Ingredient> ingredients = recipe.getIngredients();
-      RecipeCard toAdd = new RecipeCard(name, description, ingredients);
-      recipeCards.add(toAdd);
-    }
     if(getContext()!=null) {
-      CardViewAdapter cardViewAdapter = new CardViewAdapter(getContext(), recipeCards);
-      searchResultsCards.setAdapter(cardViewAdapter);
+      SearchResultsAdapter searchResultsAdapter = new SearchResultsAdapter(getContext(), searchResultsArrayList);
+      searchResultsCards.setAdapter(searchResultsAdapter);
       searchResultsCards.setPadding(50,0, 50, 0);
     }
   }

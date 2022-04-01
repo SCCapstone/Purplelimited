@@ -8,7 +8,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="50dp"
         android:id="@+id/on_hand_new_ingredient_layout">
 
         <Button
@@ -36,7 +36,7 @@
     <ListView
         android:id="@+id/on_hand_list_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="500dp"
         android:layout_below="@+id/on_hand_new_ingredient_layout" />
 
 

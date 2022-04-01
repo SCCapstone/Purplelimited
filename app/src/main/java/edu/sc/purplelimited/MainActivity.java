@@ -1,17 +1,17 @@
 package edu.sc.purplelimited;
 
-import android.os.Bundle;
-
 import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import java.util.ArrayList;
-
-import edu.sc.purplelimited.R;
 import edu.sc.purplelimited.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,7 +23,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
-        if(loggedIn) {                                  //TODO this might be better as a while loop
+
+        if(loggedIn) {
             setContentView(binding.getRoot());
             findViewById(R.id.nav_view);
             AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
@@ -35,7 +36,21 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             //Takes user back to login page when loggedIn = false
-        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        }
+    }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.logout) {
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            return true;
+        } else {
+            return false;
         }
     }
 

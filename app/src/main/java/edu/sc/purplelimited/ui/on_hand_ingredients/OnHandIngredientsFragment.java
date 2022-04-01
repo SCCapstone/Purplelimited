@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -21,6 +22,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+
+import edu.sc.purplelimited.LoginActivity;
 import edu.sc.purplelimited.R;
 import edu.sc.purplelimited.classes.Ingredient;
 import edu.sc.purplelimited.databinding.FragmentOnHandBinding;
@@ -43,8 +46,8 @@ public class OnHandIngredientsFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         onHandArrayList = new ArrayList<>();
         database = FirebaseDatabase.getInstance();
-        // TODO replace hardcoded reference with userId
-        onHandDBRef = database.getReference("users").child("1").child("onHandIngredients");
+        String userName = LoginActivity.getCurrentUserName();
+        onHandDBRef = database.getReference("users").child(userName).child("onHandIngredients");
         binding = FragmentOnHandBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         onHandListView = root.findViewById(R.id.on_hand_list_view);
@@ -129,11 +132,13 @@ public class OnHandIngredientsFragment extends Fragment {
         newIngredientQuantity = (EditText) view.findViewById(R.id.current_quantity);
         newIngredientUnits = (EditText) view.findViewById(R.id.new_ingredient_units);
 
+
         // Clickable
         ImageView increaseQuantity = (ImageView) view.findViewById(R.id.increase_quantity_popup);
         ImageView decreaseQuantity = (ImageView) view.findViewById(R.id.decrease_quantity_popup);
         Button addIngredientButton = (Button) view.findViewById(R.id.add_new_ingredient);
         Button cancelButton = (Button) view.findViewById(R.id.cancel_new_ingredient);
+        CheckBox noUnits = (CheckBox) view.findViewById(R.id.no_units_checkbox);
 
         // PopupDialog
         popupBuilder.setView(view);
@@ -163,6 +168,9 @@ public class OnHandIngredientsFragment extends Fragment {
                 String ingUnits = newIngredientUnits.getText().toString();
                 int ingQuantity = currentQuantity;
 
+                if (noUnits.isChecked()) {
+                    ingUnits = "none";
+                }
                 Boolean emptyName = (ingName.equals(""));
                 Boolean emptyUnits = (ingUnits.equals(""));
                 Boolean emptyQuantity = (ingQuantity == 0);

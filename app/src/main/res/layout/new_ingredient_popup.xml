@@ -5,116 +5,168 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/new_ingredient_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Ingredient Name"
-        android:minHeight="48dp"
-        android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.064" />
 
-    <EditText
-        android:id="@+id/new_ingredient_units"
+    <RelativeLayout
+        android:id="@+id/textLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:hint="Units (cup, tablespoon, etc)"
-        android:minHeight="48dp"
-        android:textSize="20dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="52dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/new_ingredient_name" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/new_ingredient_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="10dp"
+            android:layout_marginTop="0dp"
+            android:hint="Ingredient Name"
+            android:minHeight="48dp"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/new_ingredient_units"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/new_ingredient_name"
+            android:layout_alignParentLeft="true"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="10dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="-48dp"
+            android:hint="Units (cup, tablespoon, etc)"
+            android:minHeight="48dp"
+            android:textSize="20sp" />
+
+        <CheckBox
+            android:id="@+id/no_units_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/new_ingredient_units"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="10dp"
+            android:layout_marginStart="9dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="55dp"
+            android:minHeight="48dp"
+            android:text="No Units (for items measured individually, ie eggs)"
+            android:textColor="#888888"
+            tools:ignore="TouchTargetSizeCheck" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/unitsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textLayout">
+
+        <EditText
+            android:id="@+id/current_quantity"
+            android:layout_width="48dp"
+            android:layout_height="75dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="10dp"
+            android:layout_marginBottom="90dp"
+            android:layout_toStartOf="@+id/increase_quantity_popup"
+            android:layout_toEndOf="@+id/decrease_quantity_popup"
+            android:hint="0"
+            android:inputType="number"
+            android:textAlignment="center"
+            android:textSize="45sp" />
+
+        <ImageView
+            android:id="@+id/decrease_quantity_popup"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+
+
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="10dp"
+            android:layout_marginBottom="90dp"
+            android:src="@drawable/decrease_quantity" />
+
+        <ImageView
+            android:id="@+id/increase_quantity_popup"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="10dp"
+            android:layout_marginBottom="90dp"
+            android:src="@drawable/increase_quantity" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/buttonsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/unitsLayout">
+
+
+        <Button
+            android:id="@+id/add_new_ingredient"
+            android:backgroundTint="#66BB6A"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="22dp"
+            android:layout_marginTop="29dp"
+            android:layout_marginBottom="24dp"
+            android:minHeight="48dp"
+            android:text="Add Ingredient" />
+
+        <Button
+            android:id="@+id/cancel_new_ingredient"
+            android:backgroundTint="#EF5350"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="29dp"
+            android:layout_marginEnd="22dp"
+            android:layout_marginRight="22dp"
+            android:layout_marginBottom="24dp"
+            android:text="Cancel" />
+    </RelativeLayout>
 
     <TextView
-        android:id="@+id/enter_quantity_text"
+        android:id="@+id/popup_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:hint="Quantity:"
-        android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/new_ingredient_units"
-        app:layout_constraintVertical_bias="0.164" />
-
-    <EditText
-        android:id="@+id/current_quantity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:hint="0"
-        android:inputType="number"
-        android:textSize="40dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.258"
-        app:layout_constraintStart_toEndOf="@+id/enter_quantity_text"
-        app:layout_constraintTop_toBottomOf="@+id/new_ingredient_units"
-        app:layout_constraintVertical_bias="0.073" />
-
-    <ImageView
-        android:id="@+id/decrease_quantity_popup"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="35dp"
-        android:layout_toLeftOf="@+id/increase_quantity_popup"
-        android:src="@drawable/decrease_quantity"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/current_quantity"
-        app:layout_constraintTop_toBottomOf="@+id/new_ingredient_units"
-        app:layout_constraintVertical_bias="0.176" />
-
-    <ImageView
-        android:id="@+id/increase_quantity_popup"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="35dp"
-        android:layout_toLeftOf="@id/remove"
-        android:src="@drawable/increase_quantity"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.361"
-        app:layout_constraintStart_toEndOf="@+id/decrease_quantity_popup"
-        app:layout_constraintTop_toBottomOf="@+id/new_ingredient_units"
-        app:layout_constraintVertical_bias="0.176"
-        tools:ignore="NotSibling" />
-
-    <Button
-        android:id="@+id/add_new_ingredient"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:paddingLeft="20dp"
-        android:text="Add Ingredient"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/enter_quantity_text"
-        app:layout_constraintVertical_bias="0.296" />
-
-    <Button
-        android:id="@+id/cancel_new_ingredient"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Cancel"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="New On-Hand Ingredient"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/textLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_new_ingredient"
-        app:layout_constraintVertical_bias="0.219" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
