@@ -23,7 +23,7 @@ public class RegistrationActivityInstrumentedTest {
             new ActivityScenarioRule<>(RegistrationActivity.class);
 
     @Test
-    public void signInTextIsDisplayed() {
-        onView(withText("Sign in")).check(matches(isDisplayed()));
+    public void registrationTextIsDisplayed() {
+        onView(withText("Register an Account")).check(matches(isDisplayed()));
     }
 }
