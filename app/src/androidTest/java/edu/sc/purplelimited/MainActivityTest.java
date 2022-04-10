@@ -17,25 +17,19 @@ import org.junit.runner.RunWith;
 @LargeTest
 public class MainActivityTest {
 
-    @Rule
+    @Rule //launch the activity
     public ActivityScenarioRule<MainActivity> activityRule =
             new ActivityScenarioRule<>(MainActivity.class);
 
-    @Test
-    public void testEvent() {
-        ActivityScenario<MainActivity> scenario = activityRule.getScenario();
+
+    @Test // Checking if correct view is displayed
+    public void mainActivityViewIsDisplayed() {
+        onView(withId(R.id.container)).check(matches(isDisplayed()));
     }
 
-    /*@Test
-    public void testDriveState() {
-
-
-
-    }*/
-
-
-    @Test // Checking if correct nav view is displayed
-    public void mainActivityNavViewIsDisplayed() {
+    @Test
+    public void navViewIsDisplayed() {
         onView(withId(R.id.nav_view)).check(matches(isDisplayed()));
     }
+
 }
