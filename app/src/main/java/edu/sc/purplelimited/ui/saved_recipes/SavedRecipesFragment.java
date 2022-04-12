@@ -109,8 +109,6 @@ public class SavedRecipesFragment extends Fragment {
             }
         });
 
-        final TextView textView = binding.textDashboard;
-        savedVM.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
