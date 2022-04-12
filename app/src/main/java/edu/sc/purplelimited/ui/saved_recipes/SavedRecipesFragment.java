@@ -1,6 +1,7 @@
 package edu.sc.purplelimited.ui.saved_recipes;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +22,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -130,16 +134,41 @@ public class SavedRecipesFragment extends Fragment {
         savedRecipes.child(id).removeValue();
     }
 
-    public static void addRecipe(Recipe toAdd) {
+    public static void addRecipe(Recipe toAdd, Context context) {
+        String userName = LoginActivity.getCurrentUserName();
+
+        // Needed in case user performs a search before
+        // visiting the Saved Recipes page
         if (savedRecipes == null) {
             // TODO move this to an instantiateDatabase method
             database = FirebaseDatabase.getInstance();
-            String userName = LoginActivity.getCurrentUserName();
             savedRecipes = database.getReference("users").child(userName).child("savedRecipes");
         }
-        String id = savedRecipes.push().getKey();
-        toAdd.setId(id);
-        savedRecipes.child(id).setValue(toAdd);
+        Task<DataSnapshot> current = savedRecipes.get();
+        current.addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                // Check that the recipe isn't a duplicate
+                boolean alreadySaved = false;
+                for (DataSnapshot currentRecipe : current.getResult().getChildren()) {
+                    String nameFromList = currentRecipe.getValue(Recipe.class).getName();
+                    String compareTo = toAdd.getName();
+                    if (nameFromList.equals(compareTo)) {
+                        alreadySaved = true;
+                    }
+                }
+                if (alreadySaved) {
+                    // Recipe already saved, so notify user and don't add to Saved Recipes
+                    Toast.makeText(context, "This recipe is already saved.", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Recipe not saved, so save it and notify user of success
+                    String id = savedRecipes.push().getKey();
+                    toAdd.setId(id);
+                    savedRecipes.child(id).setValue(toAdd);
+                    Toast.makeText(context, "Saved to your list.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     // TODO: move to popup builder class to remove duplicate code
