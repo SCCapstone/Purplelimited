@@ -56,7 +56,7 @@ public class SearchResultsAdapter extends PagerAdapter {
     saveButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        SavedRecipesFragment.addRecipe(searchResults.get(position));
+       SavedRecipesFragment.addRecipe(searchResults.get(position), context);
       }
     });
 
@@ -81,7 +81,6 @@ public class SearchResultsAdapter extends PagerAdapter {
       public void onErrorResponse(VolleyError error) {/*empty*/}
     });
     ImageQueue.getInstance(context).addToQueue(imageRequest);
-
 
     cardTitle.setText(title);
     cardDescription.setText(description);
