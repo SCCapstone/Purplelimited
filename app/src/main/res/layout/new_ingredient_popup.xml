@@ -82,7 +82,7 @@
             android:layout_marginBottom="90dp"
             android:layout_toStartOf="@+id/increase_quantity_popup"
             android:layout_toEndOf="@+id/decrease_quantity_popup"
-            android:hint="0"
+            android:hint="1"
             android:inputType="number"
             android:textAlignment="center"
             android:textSize="45sp" />
