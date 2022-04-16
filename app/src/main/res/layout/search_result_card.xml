@@ -23,7 +23,6 @@
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:text="Title Field"
-                android:textColor="#000"
                 android:textSize="18sp" />
 
             <TextView
