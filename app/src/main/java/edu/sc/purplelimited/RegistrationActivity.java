@@ -80,6 +80,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                 usersReference.child(userName).child("flag").setValue("true");
                                 // Go to Login Activity
                                 Toast.makeText(RegistrationActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
+                                finish();
                                 startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
                             }
                         }

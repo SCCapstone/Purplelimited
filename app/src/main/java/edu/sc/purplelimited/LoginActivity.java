@@ -137,6 +137,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                 // Send user to the next activity
                                 Intent intent = new Intent();
+                                finish();
                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             }
                         }
