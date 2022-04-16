@@ -43,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+        MenuItem name = menu.getItem(0);
+        String userName = LoginActivity.getCurrentUserName();
+        name.setTitle("Current User: " + userName);
         return true;
     }
     @Override
