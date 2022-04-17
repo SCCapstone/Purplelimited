@@ -26,11 +26,12 @@ public class RegistrationActivity extends AppCompatActivity {
     private Button Back;
     private static FirebaseDatabase database;
     private static DatabaseReference usersReference;
+
     /*
     public UserAccount userAccount;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor sharedPreferencesEditor;
-         */
+    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +43,10 @@ public class RegistrationActivity extends AppCompatActivity {
         RegistrationPassword = findViewById(R.id.RegistrationPassword);
         RegistrationPassword2 = findViewById(R.id.RegistrationPassword2);
         Register2 = findViewById(R.id.logoutbutton);
+        Back = findViewById(R.id.backbutton);
 
         /*
         userAccount = new UserAccount();
-
         sharedPreferences = getApplicationContext().getSharedPreferences("UserAccount", MODE_PRIVATE);
         sharedPreferencesEditor = sharedPreferences.edit();
         */
