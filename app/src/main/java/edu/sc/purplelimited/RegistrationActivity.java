@@ -1,7 +1,6 @@
 package edu.sc.purplelimited;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +23,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private EditText RegistrationPassword;
     private EditText RegistrationPassword2;
     private Button Register2;
+    private Button Back;
     private static FirebaseDatabase database;
     private static DatabaseReference usersReference;
     /*
@@ -88,6 +88,14 @@ public class RegistrationActivity extends AppCompatActivity {
                         public void onCancelled(@NonNull DatabaseError error) {/*empty*/}
                     });
                 }
+            }
+        });
+        // Clicking the Back Button
+        Back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Go to Login Activity
+                Toast.makeText(RegistrationActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
             }
         });
     }
