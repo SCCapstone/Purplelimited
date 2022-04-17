@@ -115,6 +115,7 @@
         android:shadowDy="2"
         android:shadowRadius="5"
         android:text="Number of attempts remaining: 3"
+        android:textStyle="bold"
         android:textColor="@color/white" />
 
     <CheckBox
