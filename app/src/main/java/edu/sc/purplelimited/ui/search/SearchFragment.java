@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -29,9 +31,6 @@ import edu.sc.purplelimited.R;
 import edu.sc.purplelimited.classes.Ingredient;
 import edu.sc.purplelimited.classes.Recipe;
 import edu.sc.purplelimited.databinding.FragmentSearchBinding;
-import edu.sc.purplelimited.ui.saved_recipes.SavedRecipesFragment;
-import edu.sc.purplelimited.ui.swipe_ui.CardViewAdapter;
-import edu.sc.purplelimited.ui.swipe_ui.RecipeCard;
 
 public class SearchFragment extends Fragment {
   private FragmentSearchBinding binding;
@@ -40,6 +39,7 @@ public class SearchFragment extends Fragment {
   private ViewPager searchResultsCards;
   private ArrayList<Recipe> searchResultsArrayList = new ArrayList<>();
   private View root;
+  private ProgressBar progressBar;
 
   public View onCreateView(@NonNull LayoutInflater inflater,
                            ViewGroup container, Bundle savedInstanceState) {
@@ -49,11 +49,18 @@ public class SearchFragment extends Fragment {
     viewPager = root.findViewById(R.id.view_pager_suggestions);
     searchBar = root.findViewById(R.id.search_recipe_text);
     Button searchButton = root.findViewById(R.id.search_button);
+    progressBar = root.findViewById(R.id.search_progress);
+    progressBar.setVisibility(View.INVISIBLE);
     searchResultsCards = root.findViewById(R.id.view_pager_suggestions);
 
-    searchButton.setOnClickListener(view -> {
-      FetchRecipes fetchRecipes = new FetchRecipes();
-      fetchRecipes.execute();
+    searchButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        progressBar.setVisibility(View.VISIBLE);
+        viewPager.setVisibility(View.INVISIBLE);
+        FetchRecipes fetchRecipes = new FetchRecipes();
+        fetchRecipes.execute();
+      }
     });
     searchViewModel.getText().observe(getViewLifecycleOwner(), s -> {
     });
@@ -65,6 +72,7 @@ public class SearchFragment extends Fragment {
 
     @Override
     protected String doInBackground(String... strings) {
+
       String keywords = searchBar.getText().toString();
       String URL = SearchConstants.searchPrefix+keywords+SearchConstants.searchPostfix;
       StringBuilder received = new StringBuilder();
@@ -171,6 +179,7 @@ public class SearchFragment extends Fragment {
             e.printStackTrace();
           }
         }
+        progressBar.setVisibility(View.INVISIBLE);
         populateSearchResults();
       } catch (JSONException e) {
         e.printStackTrace();
@@ -184,6 +193,8 @@ public class SearchFragment extends Fragment {
       searchResultsCards.setAdapter(searchResultsAdapter);
       searchResultsCards.setPadding(50,0, 50, 0);
     }
+    Toast.makeText(getContext(), "Swipe left to see more recipes.", Toast.LENGTH_SHORT).show();
+    viewPager.setVisibility(View.VISIBLE);
   }
 
   @Override

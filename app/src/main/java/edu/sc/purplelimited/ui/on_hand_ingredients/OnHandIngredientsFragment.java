@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.database.ChildEventListener;
@@ -22,13 +23,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 
 import edu.sc.purplelimited.LoginActivity;
 import edu.sc.purplelimited.R;
 import edu.sc.purplelimited.classes.Ingredient;
 import edu.sc.purplelimited.databinding.FragmentOnHandBinding;
-
-import java.util.ArrayList;
 
 public class OnHandIngredientsFragment extends Fragment {
     private ArrayList<Ingredient> onHandArrayList;
@@ -40,19 +40,34 @@ public class OnHandIngredientsFragment extends Fragment {
     private EditText newIngredientName;
     private EditText newIngredientUnits;
     private EditText newIngredientQuantity;
-    private int currentQuantity = 0;
+    private int currentQuantity;
+    private final int defaultQuantity = 1;
+    private int defaultColor;
+    private int errorColor;
+    private boolean invalidAttempt = false;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        onHandArrayList = new ArrayList<>();
-        database = FirebaseDatabase.getInstance();
-        String userName = LoginActivity.getCurrentUserName();
-        onHandDBRef = database.getReference("users").child(userName).child("onHandIngredients");
+
+        // Set up view and binding
         binding = FragmentOnHandBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        onHandListView = root.findViewById(R.id.on_hand_list_view);
-        Button createNewIngredientButton = root.findViewById(R.id.new_ingredient_button);
 
+        // Fetch on hand ingredients from Firebase
+        String userName = LoginActivity.getCurrentUserName();
+        database = FirebaseDatabase.getInstance();
+        onHandDBRef = database.getReference("users").child(userName).child("onHandIngredients");
+
+        // Set up local list of on hand ingredients
+        onHandArrayList = new ArrayList<>();
+        onHandListView = root.findViewById(R.id.on_hand_list_view);
+
+        // Get text colors from current style
+        defaultColor = ContextCompat.getColor(getContext(), R.color.grey);
+        errorColor = ContextCompat.getColor(getContext(), R.color.errorTextColor);
+
+        // New Ingredient Button
+        Button createNewIngredientButton = root.findViewById(R.id.new_ingredient_button);
         createNewIngredientButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,6 +75,7 @@ public class OnHandIngredientsFragment extends Fragment {
             }
         });
 
+        // Populate local list with database entries
         onHandDBRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot ds, @Nullable String pcn) {
@@ -123,15 +139,18 @@ public class OnHandIngredientsFragment extends Fragment {
         }
     }
 
-    public void createDialog(){
+    private void createDialog(){
         AlertDialog.Builder popupBuilder = new AlertDialog.Builder(getContext());
         final View view = getLayoutInflater().inflate(R.layout.new_ingredient_popup, null);
+
+        // Reset local indicators to default values
+        currentQuantity = defaultQuantity;
+        invalidAttempt = false;
 
         // Input Fields
         newIngredientName = (EditText) view.findViewById(R.id.new_ingredient_name);
         newIngredientQuantity = (EditText) view.findViewById(R.id.current_quantity);
         newIngredientUnits = (EditText) view.findViewById(R.id.new_ingredient_units);
-
 
         // Clickable
         ImageView increaseQuantity = (ImageView) view.findViewById(R.id.increase_quantity_popup);
@@ -149,39 +168,71 @@ public class OnHandIngredientsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 currentQuantity++;
-                newIngredientQuantity.setText(""+currentQuantity);
+                newIngredientQuantity.setText(""+ currentQuantity);
             }
         });
         decreaseQuantity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               if(currentQuantity > 0) {
+               if(currentQuantity > 1) {
                    currentQuantity--;
-                   newIngredientQuantity.setText(""+currentQuantity);
+                   newIngredientQuantity.setText(""+ currentQuantity);
                }
+            }
+        });
+        noUnits.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(noUnits.isChecked()) {
+                    newIngredientUnits.setVisibility(View.GONE);
+                    newIngredientUnits.setText("none");
+                    newIngredientUnits.setHintTextColor(defaultColor);
+                } else {
+                    if (invalidAttempt) {
+                        newIngredientUnits.setHintTextColor(errorColor);
+                    }
+                    newIngredientUnits.setText("");
+                    newIngredientUnits.setVisibility(View.VISIBLE);
+                }
             }
         });
         addIngredientButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                // Get data from fields at time of click
                 String ingName = newIngredientName.getText().toString();
                 String ingUnits = newIngredientUnits.getText().toString();
-                int ingQuantity = currentQuantity;
 
-                if (noUnits.isChecked()) {
-                    ingUnits = "none";
-                }
-                Boolean emptyName = (ingName.equals(""));
-                Boolean emptyUnits = (ingUnits.equals(""));
-                Boolean emptyQuantity = (ingQuantity == 0);
+                // Check that data from fields is valid
+                String validRegex = "[ ]*[A-Za-z0-9]+[ ]*";
+                boolean validName = ingName.matches(validRegex);
+                boolean validUnits = ingUnits.matches(validRegex);
+                boolean bothInvalid = (!validUnits && !validName);
 
-                //TODO fix toast notification
-                if(emptyName || emptyUnits || emptyQuantity) {
-                    String toastText = "Please enter all required fields.";
+                // Catch invalid input
+                if(!validName || !validUnits) {
+                    invalidAttempt = true;
+
+                    // Remove invalid input and set hint text to red
+                    if (!validName) {
+                        newIngredientName.setText("");
+                        newIngredientName.setHintTextColor(errorColor);
+                    }
+                    if (!validUnits) {
+                        newIngredientUnits.setText("");
+                        newIngredientUnits.setHintTextColor(errorColor);
+                    }
+
+                    // Create a toast based on which fields
+                    // contain invalid input
+                    String fieldString = bothInvalid ? "fields" : "field";
+                    String missingFields = bothInvalid ? "Name and Units " : !validName ? "Name " : "Units ";
+                    String toastText = "The " + missingFields + fieldString +
+                                       " must contain at least one letter or number.";
                     Toast.makeText(view.getContext(), toastText, Toast.LENGTH_SHORT).show();
                 } else {
-                    addIngredient(new Ingredient(ingName, ingUnits, ingQuantity, "none"));
-                    currentQuantity = 0;
+                    addIngredient(new Ingredient(ingName, ingUnits, currentQuantity, "none"));
                     addIngredientPopup.dismiss();
                 }
             }
@@ -189,7 +240,6 @@ public class OnHandIngredientsFragment extends Fragment {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                currentQuantity = 0;
                 addIngredientPopup.dismiss();
             }
         });

@@ -39,14 +39,19 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
         }
     }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+        MenuItem name = menu.getItem(0);
+        String userName = LoginActivity.getCurrentUserName();
+        name.setTitle("Current User: " + userName);
         return true;
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.logout) {
+            finish();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             return true;
         } else {

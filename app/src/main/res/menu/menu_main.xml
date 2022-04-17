@@ -3,7 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
-    <item android:id="@+id/logout" android:title="Logout"
+    <item
+        android:id="@+id/loggedInUser"
+        android:title="current user"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/logout"
+        android:title="Logout"
         android:orderInCategory="100"
         app:showAsAction="never"
         />

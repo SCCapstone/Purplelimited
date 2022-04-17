@@ -26,9 +26,11 @@ public class RegistrationActivity extends AppCompatActivity {
     private Button Register2;
     private static FirebaseDatabase database;
     private static DatabaseReference usersReference;
+    /*
     public UserAccount userAccount;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor sharedPreferencesEditor;
+         */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +43,12 @@ public class RegistrationActivity extends AppCompatActivity {
         RegistrationPassword2 = findViewById(R.id.RegistrationPassword2);
         Register2 = findViewById(R.id.logoutbutton);
 
+        /*
         userAccount = new UserAccount();
 
         sharedPreferences = getApplicationContext().getSharedPreferences("UserAccount", MODE_PRIVATE);
         sharedPreferencesEditor = sharedPreferences.edit();
+        */
 
         // Instantiate Firebase database instance and users reference
         database = FirebaseDatabase.getInstance();
@@ -62,38 +66,27 @@ public class RegistrationActivity extends AppCompatActivity {
 
                 // Check if the fields are valid
                 if(validate(userName, userPassword, userPassword2)) {
-                    if(userAccount.checkUsername(userName)) {
-                        Toast.makeText(RegistrationActivity.this, "This username is already in use!", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        DatabaseReference check = database.getReference("users").child(userName);
-                        check.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                // check to see if the username already exists
-                                DataSnapshot flag = snapshot.child("flag");
-                                if(flag.exists()) {
-                                    Toast.makeText(RegistrationActivity.this, "This username is already in use!", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    // Add the credentials into local database
-                                    userAccount.addAccount(userName, userPassword);
-
-                                    // Storing credentials and adds them to the HashMap
-                                    sharedPreferencesEditor.putString(userName, userPassword);
-                                    sharedPreferencesEditor.putString("SavedUsername", "");
-                                    sharedPreferencesEditor.putString("SavedPassword", "");
-                                    sharedPreferencesEditor.apply();
-
-                                    // Go to Login Activity
-                                    Toast.makeText(RegistrationActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
-                                }
+                    DatabaseReference check = database.getReference("users").child(userName);
+                    check.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            // check to see if the username already exists
+                            DataSnapshot flag = snapshot.child("flag");
+                            if(flag.exists()) {
+                                Toast.makeText(RegistrationActivity.this, "This username is already in use!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                usersReference.child(userName).child("userName").setValue(userName);
+                                usersReference.child(userName).child("password").setValue(userPassword);
+                                usersReference.child(userName).child("flag").setValue("true");
+                                // Go to Login Activity
+                                Toast.makeText(RegistrationActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
+                                finish();
+                                startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
                             }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {/*empty*/}
-                        });
-                        usersReference.child(userName).child("userName").setValue(userName);
-                    }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {/*empty*/}
+                    });
                 }
             }
         });

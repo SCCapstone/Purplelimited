@@ -9,6 +9,5 @@
         android:layout_height="wrap_content"
         android:id="@+id/section_textview"
         android:textSize="20sp"
-        android:textColor="@color/black"
         android:layout_margin="10dp"/>
 </LinearLayout>
