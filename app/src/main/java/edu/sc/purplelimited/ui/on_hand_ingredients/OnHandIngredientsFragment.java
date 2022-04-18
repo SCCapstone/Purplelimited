@@ -205,7 +205,7 @@ public class OnHandIngredientsFragment extends Fragment {
                 String ingUnits = newIngredientUnits.getText().toString();
 
                 // Check that data from fields is valid
-                String validRegex = "[ ]*[A-Za-z0-9]+[ ]*";
+                String validRegex = "[A-Za-z0-9]+[A-Za-z0-9 ]*";
                 boolean validName = ingName.matches(validRegex);
                 boolean validUnits = ingUnits.matches(validRegex);
                 boolean bothInvalid = (!validUnits && !validName);
@@ -229,8 +229,9 @@ public class OnHandIngredientsFragment extends Fragment {
                     String fieldString = bothInvalid ? "fields" : "field";
                     String missingFields = bothInvalid ? "Name and Units " : !validName ? "Name " : "Units ";
                     String toastText = "The " + missingFields + fieldString +
-                                       " must contain at least one letter or number.";
-                    Toast.makeText(view.getContext(), toastText, Toast.LENGTH_SHORT).show();
+                                       " must contain at least one letter or number," +
+                                       " and cannot begin with a space.";
+                    Toast.makeText(view.getContext(), toastText, Toast.LENGTH_LONG).show();
                 } else {
                     addIngredient(new Ingredient(ingName, ingUnits, currentQuantity, "none"));
                     addIngredientPopup.dismiss();
