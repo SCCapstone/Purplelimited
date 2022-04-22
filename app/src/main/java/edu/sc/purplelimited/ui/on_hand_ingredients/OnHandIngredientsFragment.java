@@ -134,8 +134,15 @@ public class OnHandIngredientsFragment extends Fragment {
 
     private void populateOnHandIngredients() {
         if(getContext() != null) {
+            // save the scroll position before changing the view
+            int prevPosition = onHandListView.getFirstVisiblePosition();
+            View v = onHandListView.getChildAt(0);
+            int top = (v == null) ? 0 : v.getTop();
+
+            // populate the view and reset to the original scroll position
             OnHandListAdapter adapter = new OnHandListAdapter(this.getContext(), onHandArrayList);
             onHandListView.setAdapter(adapter);
+            onHandListView.setSelectionFromTop(prevPosition, top);
         }
     }
 

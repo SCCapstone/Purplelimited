@@ -124,9 +124,16 @@ public class SavedRecipesFragment extends Fragment {
 
     public void populateRecipeList() {
         if(getContext()!=null) {
+            // save the scroll position before changing the view
+            int prevPosition = savedRecipesListView.getFirstVisiblePosition();
+            View v = savedRecipesListView.getChildAt(0);
+            int top = (v == null) ? 0 : v.getTop();
+
+            // populate the listview and reset scroll position
             SavedRecipesListAdapter adapter;
             adapter = new SavedRecipesListAdapter(getContext(), savedArrayList);
             savedRecipesListView.setAdapter(adapter);
+            savedRecipesListView.setSelectionFromTop(prevPosition, top);
         }
     }
 
