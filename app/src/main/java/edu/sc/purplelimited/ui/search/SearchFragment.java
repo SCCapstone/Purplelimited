@@ -56,6 +56,21 @@ public class SearchFragment extends Fragment {
     searchButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
+        String searchText = searchBar.getText().toString();
+        boolean tooShort = searchText.length() < 3;
+        boolean noCharacters = searchText.matches("[ ]*");
+        boolean invalidChars = !searchText.matches("[A-Za-z0-9 ]*");
+
+        if (tooShort || noCharacters) {
+          String toastText = "Search terms must be at least 3 characters.";
+          Toast.makeText(getContext(), toastText, Toast.LENGTH_SHORT).show();
+          return;
+        }
+        if (invalidChars) {
+          String toastText = "Search terms can only contain letters, numbers and spaces.";
+          Toast.makeText(getContext(), toastText, Toast.LENGTH_SHORT).show();
+          return;
+        }
         progressBar.setVisibility(View.VISIBLE);
         viewPager.setVisibility(View.INVISIBLE);
         FetchRecipes fetchRecipes = new FetchRecipes();
@@ -74,6 +89,18 @@ public class SearchFragment extends Fragment {
     protected String doInBackground(String... strings) {
 
       String keywords = searchBar.getText().toString();
+      // look for leading spaces in keyword string
+      int blankCount = 0;
+      for (int i = 0;i<keywords.length();i++) {
+        if (keywords.charAt(i) == ' ') {
+          blankCount++;
+          System.out.println(blankCount);
+        } else {
+          break;
+        }
+      }
+      // remove leading spaces, if any
+      keywords = keywords.substring(blankCount);
       String URL = SearchConstants.searchPrefix+keywords+SearchConstants.searchPostfix;
       StringBuilder received = new StringBuilder();
 
@@ -193,7 +220,11 @@ public class SearchFragment extends Fragment {
       searchResultsCards.setAdapter(searchResultsAdapter);
       searchResultsCards.setPadding(50,0, 50, 0);
     }
-    Toast.makeText(getContext(), "Swipe left to see more recipes.", Toast.LENGTH_SHORT).show();
+    if(searchResultsArrayList.size()==0){
+      Toast.makeText(getContext(), "No results found.", Toast.LENGTH_SHORT).show();
+    } else {
+      Toast.makeText(getContext(), "Swipe left to see more recipes.", Toast.LENGTH_SHORT).show();
+    }
     viewPager.setVisibility(View.VISIBLE);
   }
 
