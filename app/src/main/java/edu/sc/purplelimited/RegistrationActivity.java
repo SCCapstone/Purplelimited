@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,12 +26,6 @@ public class RegistrationActivity extends AppCompatActivity {
     private static FirebaseDatabase database;
     private static DatabaseReference usersReference;
 
-    /*
-    public UserAccount userAccount;
-    SharedPreferences sharedPreferences;
-    SharedPreferences.Editor sharedPreferencesEditor;
-    */
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,12 +37,6 @@ public class RegistrationActivity extends AppCompatActivity {
         RegistrationPassword2 = findViewById(R.id.RegistrationPassword2);
         Register2 = findViewById(R.id.logoutbutton);
         Back = findViewById(R.id.backbutton);
-
-        /*
-        userAccount = new UserAccount();
-        sharedPreferences = getApplicationContext().getSharedPreferences("UserAccount", MODE_PRIVATE);
-        sharedPreferencesEditor = sharedPreferences.edit();
-        */
 
         // Instantiate Firebase database instance and users reference
         database = FirebaseDatabase.getInstance();
