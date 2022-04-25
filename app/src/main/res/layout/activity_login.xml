@@ -61,7 +61,7 @@
         android:shadowRadius="5"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
-        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^*()-_=+<>?\|`~"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
         />
 
     <EditText
@@ -84,7 +84,7 @@
         android:shadowRadius="5"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
-        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^*()-_=+<>?\|`~"/>
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/loginbutton"
