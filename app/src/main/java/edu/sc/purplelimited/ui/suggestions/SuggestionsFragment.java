@@ -105,6 +105,7 @@ public class SuggestionsFragment extends Fragment {
         DBRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
                 String name = snapshot.child("ingredientName").getValue(String.class);
                 onHandArray.add(name);
 

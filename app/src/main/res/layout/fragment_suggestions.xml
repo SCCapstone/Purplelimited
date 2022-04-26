@@ -15,7 +15,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
             android:layout_marginBottom="148dp"
-            android:text="Suggestions"
+            android:text=" "
             android:textAlignment="center"
             android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="parent"
