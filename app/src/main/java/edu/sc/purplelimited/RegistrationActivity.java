@@ -83,7 +83,7 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Go to Login Activity
-                Toast.makeText(RegistrationActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
             }
         });
     }
