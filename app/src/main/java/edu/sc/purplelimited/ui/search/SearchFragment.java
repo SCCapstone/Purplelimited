@@ -136,7 +136,6 @@ public class SearchFragment extends Fragment {
 
     @Override
     protected void onPostExecute(String s) {
-      //TODO: refine keyword comparison when performing search
       //TODO: minimize try/catch blocks
       searchResultsArrayList.clear();
       try {
