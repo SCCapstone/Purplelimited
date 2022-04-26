@@ -1,7 +1,6 @@
 package edu.sc.purplelimited;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,12 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -33,15 +28,10 @@ public class LoginActivity extends AppCompatActivity {
     private CheckBox RememberMe;
     private int cnt = 3; //base amount of login attempts
 
-    static String userName = "admin";
-    String userPassword = "admin"; //these are hard-coded for testing
+    static String userName;
+    String userPassword;
 
     boolean isValid = false;
-
-    public UserAccount userAccount;
-
-    SharedPreferences sharedPreferences;
-    SharedPreferences.Editor sharedPreferencesEditor;
 
     FirebaseDatabase database;
     DatabaseReference usersReference;
@@ -57,33 +47,8 @@ public class LoginActivity extends AppCompatActivity {
         AttemptsInfo = findViewById(R.id.noAttempts);
         Login = findViewById(R.id.loginbutton);
         Register = findViewById(R.id.registerbutton);
-        RememberMe = findViewById(R.id.RememberMe);
 
-        userAccount = new UserAccount();
-
-        sharedPreferences = getApplicationContext().getSharedPreferences("UserAccount", MODE_PRIVATE);
-        sharedPreferencesEditor = sharedPreferences.edit();
-
-        // Check to see if the shared preferences file exists
-        if(sharedPreferences != null) {
-
-            Map<String, ?> preferencesMap = sharedPreferences.getAll();
-
-            if(preferencesMap.size() != 0) {
-                userAccount.loadAccount(preferencesMap);
-            }
-
-            String savedUsername = sharedPreferences.getString("SavedUsername", "");
-            String savedPassword = sharedPreferences.getString("SavedPassword", "");
-
-            if(sharedPreferences.getBoolean("Checkbox", false)) {
-                Name.setText(savedUsername);
-                Password.setText(savedPassword);
-                RememberMe.setChecked(true);
-            }
-        }
-
-            // When login button is clicked
+        // When login button is clicked
         Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -154,20 +119,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // If the 'Remember Me' checkbox is checked..
-       RememberMe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sharedPreferencesEditor.putBoolean("RememberMeCheckbox", RememberMe.isChecked());
-                sharedPreferencesEditor.apply();
-            }
-        });
     }
-
-    private boolean validate(String userName, String userPassword) {
-        return userAccount.checkAccount(userName, userPassword); // moved validate from here to the UserAccount.java
-    }
-
     public static String getCurrentUserName() {
         return userName;
     }

@@ -1,13 +1,11 @@
 package edu.sc.purplelimited;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,13 +22,9 @@ public class RegistrationActivity extends AppCompatActivity {
     private EditText RegistrationPassword;
     private EditText RegistrationPassword2;
     private Button Register2;
+    private Button Back;
     private static FirebaseDatabase database;
     private static DatabaseReference usersReference;
-    /*
-    public UserAccount userAccount;
-    SharedPreferences sharedPreferences;
-    SharedPreferences.Editor sharedPreferencesEditor;
-         */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +36,7 @@ public class RegistrationActivity extends AppCompatActivity {
         RegistrationPassword = findViewById(R.id.RegistrationPassword);
         RegistrationPassword2 = findViewById(R.id.RegistrationPassword2);
         Register2 = findViewById(R.id.logoutbutton);
-
-        /*
-        userAccount = new UserAccount();
-
-        sharedPreferences = getApplicationContext().getSharedPreferences("UserAccount", MODE_PRIVATE);
-        sharedPreferencesEditor = sharedPreferences.edit();
-        */
+        Back = findViewById(R.id.backbutton);
 
         // Instantiate Firebase database instance and users reference
         database = FirebaseDatabase.getInstance();
@@ -88,6 +76,14 @@ public class RegistrationActivity extends AppCompatActivity {
                         public void onCancelled(@NonNull DatabaseError error) {/*empty*/}
                     });
                 }
+            }
+        });
+        // Clicking the Back Button
+        Back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Go to Login Activity
+                startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
             }
         });
     }

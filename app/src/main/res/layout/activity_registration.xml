@@ -30,17 +30,19 @@
 
     <TextView
         android:id="@+id/PassText"
-        android:layout_width="313dp"
-        android:layout_height="20dp"
+        android:layout_width="407dp"
+        android:layout_height="56dp"
         android:layout_below="@id/RegistrationPassword2"
         android:layout_marginStart="49dp"
-        android:layout_marginTop="200dp"
         android:layout_marginEnd="49dp"
-        android:text="Passwords should be a minimum of 8 characters long"
-        app:layout_constraintBottom_toTopOf="@+id/RegistrationPassword2"
+        android:padding="20dp"
+        android:shadowColor="@color/black"
+        android:text="Passwords should be a minimum of 8 characters"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.351"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/RegistrationPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/RegistrationPassword2" />
 
     <EditText
         android:id="@+id/RegistrationName"
@@ -61,7 +63,8 @@
         app:layout_constraintBottom_toTopOf="@+id/RegistrationPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TopText" />
+        app:layout_constraintTop_toBottomOf="@+id/TopText"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^*()-+=_"/>
 
     <EditText
         android:id="@+id/RegistrationPassword"
@@ -83,7 +86,8 @@
         app:layout_constraintBottom_toTopOf="@+id/RegistrationPassword2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/RegistrationName" />
+        app:layout_constraintTop_toBottomOf="@+id/RegistrationName"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^*()-+=_"/>
 
     <EditText
         android:id="@+id/RegistrationPassword2"
@@ -105,7 +109,8 @@
         app:layout_constraintBottom_toTopOf="@+id/logoutbutton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/RegistrationPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/RegistrationPassword"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^*()-+=_"/>
 
     <Button
         android:id="@+id/logoutbutton"
@@ -127,5 +132,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/RegistrationPassword2" />
+
+    <Button
+        android:id="@+id/backbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logoutbutton"
+        android:layout_centerHorizontal="true"
+        android:backgroundTint="@color/design_default_color_secondary"
+        android:shadowColor="@color/black"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="5"
+        android:text="Back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/RegistrationPassword2"
+        app:layout_constraintVertical_bias="0.415" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
