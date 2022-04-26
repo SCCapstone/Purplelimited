@@ -126,20 +126,7 @@ public class SuggestionsFragment extends Fragment {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                int index = 0;
-                String id = snapshot.child("ingredientName").getValue(String.class);
-                //String remove =
-                for(int i = 0; i < onHandArray.size();i++) {
-                    String ingredient = onHandArray.get(i);
-                    if (ingredient.equals(id)) {
-                        index = i;
-                    }
-                }
-                onHandArray.remove(index);
-                progressBar.setVisibility(View.VISIBLE);
-                viewPager.setVisibility(View.INVISIBLE);
-                FetchRecipes fetchRecipes = new FetchRecipes();
-                fetchRecipes.execute();
+                /*Empty*/
             }
 
             @Override
