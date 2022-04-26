@@ -57,7 +57,7 @@ public class Ingredient {
     String retName = ingredientName;
     String retQuantity;
 
-    //TODO de-spaghettify this monstrosity
+
     if (units.equals("none")) {
       retUnits += "";
     } else {

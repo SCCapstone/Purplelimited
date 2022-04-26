@@ -17,4 +17,15 @@ public class IngredientTest {
     public void ingredient_toString_test() {
         assertEquals(expected, actual);
     }
+
+    @Test
+    public void pluralSingularTest() {
+        Ingredient newIngredient = new Ingredient("ground beef", "lb", 5, "001");
+        String expectedPlural = "5 lbs ground beef";
+        String actualPlural = newIngredient.toString();
+        assertEquals(expectedPlural, actualPlural);
+        String expectedSingular = "1 lb ground beef";
+        String actualSingular = ingredient.toString();
+        assertEquals(expectedSingular, actualSingular);
+    }
 }
