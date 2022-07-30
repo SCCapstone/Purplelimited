@@ -49,6 +49,9 @@ public class SuggestionsAdapter extends PagerAdapter {
         View view = LayoutInflater.from(context).inflate(R.layout.search_result_card_images, container, false);
 
         // Instantiate the Views
+
+        // create second suggestions.xml file. Replace below
+
         ImageView cardImage = view.findViewById(R.id.searchCardImage);
         TextView cardTitle = view.findViewById(R.id.searchCardTitle);
         TextView cardDescription = view.findViewById(R.id.searchCardDescription);
