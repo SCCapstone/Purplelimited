@@ -77,9 +77,6 @@ public class SuggestionsFragment extends Fragment {
     private View root;
     private int minPage = 0;
 
-    //TODO implement save functionality
-    //TODO implement dismiss functionality
-    //TODO pull suggestions from API
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
