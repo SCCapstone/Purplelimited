@@ -17,6 +17,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
 
 import edu.sc.purplelimited.R;
 import edu.sc.purplelimited.classes.ImageQueue;
@@ -30,7 +32,17 @@ public class SuggestionsAdapter extends PagerAdapter {
 
     public SuggestionsAdapter(Context context, ArrayList<Recipe> suggestions) {
         this.context = context;
+//        randomizeSuggestions();
         this.suggestions = suggestions;
+
+    }
+
+    public void randomizeSuggestions() {
+        Random rand = new Random();
+        for (int i = 0; i < suggestions.size(); i++) {
+            int randomIndex = rand.nextInt(suggestions.size());
+            Recipe randomSugg = suggestions.get(randomIndex);
+        }
     }
 
     @Override
@@ -46,13 +58,13 @@ public class SuggestionsAdapter extends PagerAdapter {
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        View view = LayoutInflater.from(context).inflate(R.layout.search_result_card_images, container, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.sugg_card_images, container, false);
 
         // Instantiate the Views
-        ImageView cardImage = view.findViewById(R.id.searchCardImage);
-        TextView cardTitle = view.findViewById(R.id.searchCardTitle);
-        TextView cardDescription = view.findViewById(R.id.searchCardDescription);
-        Button saveButton = view.findViewById(R.id.saveFromSearch);
+        ImageView cardImage = view.findViewById(R.id.suggCard);
+        TextView cardTitle = view.findViewById(R.id.suggCardTitle);
+        TextView cardDescription = view.findViewById(R.id.suggCardDescription);
+        Button saveButton = view.findViewById(R.id.saveSuggest);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

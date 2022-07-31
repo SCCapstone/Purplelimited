@@ -29,8 +29,9 @@
         <entry key="app/src/main/res/layout/fragment_on_hand.xml" value="0.32065217391304346" />
         <entry key="app/src/main/res/layout/fragment_saved_recipes.xml" value="0.15485229492187502" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.19895833333333332" />
-        <entry key="app/src/main/res/layout/fragment_suggestions.xml" value="0.29774961609771283" />
+        <entry key="app/src/main/res/layout/fragment_suggestions.xml" value="0.165" />
         <entry key="app/src/main/res/layout/recipe_card.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/saved_recipe_popup.xml" value="0.1" />
         <entry key="app/src/main/res/layout/saved_recipes_lv.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/search_result_card.xml" value="0.33" />
         <entry key="app/src/main/res/layout/search_result_card_images.xml" value="0.3098958333333333" />
@@ -38,6 +39,8 @@
         <entry key="app/src/main/res/layout/search_results_row.xml" value="0.1" />
         <entry key="app/src/main/res/layout/section_content_list.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/sections_list.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/sugg_card_images.xml" value="0.3964102564102564" />
+        <entry key="app/src/main/res/layout/suggest_recipe_popup.xml" value="0.1" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.25" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.21354166666666666" />
       </map>

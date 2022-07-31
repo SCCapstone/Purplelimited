@@ -23,6 +23,15 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:backgroundTint="#66BB6A"
+        android:layout_height="wrap_content"
+        android:text="Next Recipe"
+        app:layout_constraintBottom_toBottomOf="@id/text_home"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_gravity="center"
+        android:id="@+id/nextSuggest"/>
 
 
     <RelativeLayout
@@ -34,7 +43,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ProgressBar
-            android:id="@+id/gen_progress"
+            android:id="@+id/suggesting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minWidth="40dp"
@@ -59,6 +68,7 @@
             tools:ignore="SpeakableTextPresentCheck">
 
     </androidx.viewpager.widget.ViewPager>
+
 
     </RelativeLayout>
 

@@ -8,5 +8,5 @@ public class SearchConstants {
   public static final String headerHostPrefix = "x-rapidapi-host";
   public static final String headerHostValue = "tasty.p.rapidapi.com";
   public static final String headerKeyPrefix= "x-rapidapi-key";
-  public static final String headerKeyValue = "1a9d0aedc9msh7f67f6e5fb475b6p15aeb6jsn4542dbc93f22";
+  public static final String headerKeyValue = "de3a8400b7msh92894220a311f0ep144dbajsn2260a8707721";
 }

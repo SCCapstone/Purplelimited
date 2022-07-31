@@ -1,15 +1,20 @@
 package edu.sc.purplelimited.ui.suggestions;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.content.SharedPreferences;
@@ -23,6 +28,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 //import androidx.viewpager2.widget.ViewPager2;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
@@ -41,12 +49,17 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.lang.Object;
+import java.util.HashMap;
+import java.util.Random;
 
 import edu.sc.purplelimited.LoginActivity;
 import edu.sc.purplelimited.R;
+import edu.sc.purplelimited.classes.ImageQueue;
 import edu.sc.purplelimited.classes.Ingredient;
 import edu.sc.purplelimited.classes.Recipe;
 import edu.sc.purplelimited.databinding.FragmentSuggestionsBinding;
+import edu.sc.purplelimited.ui.PopupListAdapter;
 import edu.sc.purplelimited.ui.saved_recipes.SavedRecipesFragment;
 import edu.sc.purplelimited.ui.search.SearchConstants;
 import edu.sc.purplelimited.ui.search.SearchFragment;
@@ -56,28 +69,20 @@ import edu.sc.purplelimited.ui.swipe_ui.Model;
 
 public class SuggestionsFragment extends Fragment {
 
-    // variables
-    private FragmentSuggestionsBinding binding;
     private ViewPager viewPager;
-    private ViewPager suggestionsCards;
+    private ViewPager suggestionCards;
+    private View root;
+    private FragmentSuggestionsBinding binding;
     private ArrayList<Recipe> suggestedRecipesList = new ArrayList<>();
     private ProgressBar progressBar;
-
     SharedPreferences sharedPreferences;
     public static final String SHARED_PREFS = "sharedPrefs";
     public static final String RECIPE = "recipe";
     TextView text_home;
-
-
     private static DatabaseReference DBRef;
     private static FirebaseDatabase database;
-
     private ArrayList<String> onHandArray = new ArrayList<>();
-    private View root;
-
-    //TODO implement save functionality
-    //TODO implement dismiss functionality
-    //TODO pull suggestions from API
+    private AlertDialog suggestionPopup;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -88,13 +93,25 @@ public class SuggestionsFragment extends Fragment {
         binding = FragmentSuggestionsBinding.inflate(inflater, container, false);
         root = binding.getRoot();
 
-        // call reference ids
+        // call reference ids sugg_card_images
         viewPager = root.findViewById(R.id.view_pager_suggest);
-        suggestionsCards = root.findViewById(R.id.view_pager_suggest);
+        suggestionCards = root.findViewById(R.id.view_pager_suggest);
         text_home = root.findViewById(R.id.text_home);
-        progressBar = root.findViewById(R.id.gen_progress);
+        progressBar = root.findViewById(R.id.suggesting);
         progressBar.setVisibility(View.INVISIBLE);
+        Button nextButton = root.findViewById(R.id.nextSuggest);
 
+        // Next button for user
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                int pagei = position + 1;
+                suggestionCards.setCurrentItem(getItem(+1),true);
+            }
+        });
+//    private int getItem(int i) {
+//        return suggestionCards.getCurrentItem() + i;
+//        }
 
         // Database reference onHandIngredients from Firebase
         String userName = LoginActivity.getCurrentUserName();
@@ -108,43 +125,69 @@ public class SuggestionsFragment extends Fragment {
 
                 String name = snapshot.child("ingredientName").getValue(String.class);
                 onHandArray.add(name);
-
                 progressBar.setVisibility(View.VISIBLE);
                 viewPager.setVisibility(View.INVISIBLE);
                 FetchRecipes fetchRecipes = new FetchRecipes();
                 fetchRecipes.execute();
-
-
-                //String toastText = onHandArray.toString();
-                //Toast.makeText(getContext(), toastText, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 /*empty*/
             }
-
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
                 /*Empty*/
             }
-
             @Override
             public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 /*empty*/
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 /*empty*/
             }
         });
-
+        // Keeps track overlap event
         suggestionsViewModel.getText().observe(getViewLifecycleOwner(), s -> {
         });
+
+
+//        suggestionCards.setOnClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//
+//            }
+//
+//            @Override
+//            public void onClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                Recipe recipe = suggestedRecipesList.get(i);
+//                createPopup(recipe);
+//            }
+//        });
+//
+
+//        suggestionCards.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Recipe recipe = suggestedRecipesList.get(i)
+//            }
+//
+//            @Override
+//            public void onClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                Recipe recipe = suggestedRecipesList.get(i);
+//                createPopup(recipe);
+//            }
+
+//        });
+
+
+
+
         return root;
     }
 
+    // Async keyword search
     @SuppressLint("StaticFieldLeak")
     public class FetchRecipes extends AsyncTask<String, String, String> {
 
@@ -158,8 +201,6 @@ public class SuggestionsFragment extends Fragment {
                     keywords = keywords.deleteCharAt(i);
                 }
             }
-            //String keywords = string;
-
             // look for leading spaces in keyword string
             int blankCount = 0;
             for (int i = 0;i<keywords.length();i++) {
@@ -176,13 +217,13 @@ public class SuggestionsFragment extends Fragment {
             StringBuilder received = new StringBuilder();
             System.out.println(URL);
             try {
-                URL url;
+                URL url; //OKhttp
                 HttpURLConnection urlConnection = null;
                 try {
                     url = new URL(URL);
                     urlConnection = (HttpURLConnection) url.openConnection();
                     urlConnection.setRequestProperty(SearchConstants.headerHostPrefix,
-                            SearchConstants.headerHostValue);
+                            SearchConstants.headerHostValue); // Search Fragment keys
                     urlConnection.setRequestProperty(SearchConstants.headerKeyPrefix,
                             SearchConstants.headerKeyValue);
                     InputStream inputStream = urlConnection.getInputStream();
@@ -205,15 +246,24 @@ public class SuggestionsFragment extends Fragment {
             return received.toString();
         }
 
+        //JSON Parsing
+        //Random functionality
         @Override
         protected void onPostExecute(String s) {
-            //TODO: refine keyword comparison when performing search
-            //TODO: minimize try/catch blocks
             suggestedRecipesList.clear();
+//            Math.random() = new Random();
             try {
                 JSONObject resultsJSON = new JSONObject(s);
                 JSONArray recipesArrayJSON = resultsJSON.getJSONArray("results");
-                for (int i = 0; i < recipesArrayJSON.length(); i++) {
+                final int numberOfSuggestions = recipesArrayJSON.length();
+                Random random = new Random();
+                int randomIndex = random.nextInt(recipesArrayJSON.length());
+                for (int i = 0; i < (numberOfSuggestions); i++) {
+//                    int randomIndex = rand.nextInt(recipesArrayJSON.length());
+//                    Random random = new Random();
+//                    int randomIndex = random.nextInt(recipesArrayJSON.length());
+//                    int randomSuggestion = recipesArrayJSON.get(randomIndex+i);
+//                    int randomSuggestion = randomIndex + i;
                     JSONObject currentRecipeObj = recipesArrayJSON.getJSONObject(i);
                     ArrayList<String> recipeInstructions = new ArrayList<String>();
                     try {
@@ -270,36 +320,102 @@ public class SuggestionsFragment extends Fragment {
                             }
                         } catch (JSONException e) {
                             continue;
-                        }
+                        } //add saved Recipe
                         Recipe toAdd = new Recipe(recipeName, recipeDesc, recipeIngredients, "none", thumbnail, recipeInstructions);
                         suggestedRecipesList.add(toAdd);
                     } catch (JSONException e){
                         e.printStackTrace();
+                        //
                     }
                 }
                 progressBar.setVisibility(View.INVISIBLE);
                 populateSuggestionCards();
+//                progressBar.setVisibility(View.VISIBLE);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    // TODO replace hardcoded images
+    // function for nextButton
+    private int getItem(int i) {
+        return suggestionCards.getCurrentItem() + i;
+    }
+
+    private void createPopup(Recipe recipe){
+        AlertDialog.Builder popupBuilder = new AlertDialog.Builder((getContext()));
+        final View view = getLayoutInflater().inflate(R.layout.suggest_recipe_popup, null);
+
+        // Get the toStrings from each Ingredient in the Recipe
+        ArrayList<String> ingToString = new ArrayList<>();
+        ArrayList<Ingredient> ingredientsList = recipe.getIngredients();
+        for (Ingredient ingredient : ingredientsList) {
+            String toString = ingredient.toString();
+            ingToString.add(toString);
+        }
+
+        // Image Preview
+        ImageView preview = (ImageView) view.findViewById(R.id.suggest_popup);
+        String url = recipe.getThumbnailURL();
+        ImageRequest imageRequest = new ImageRequest(url,
+                new Response.Listener<Bitmap>() {
+                    @Override
+                    public void onResponse(Bitmap response) {
+                        preview.setImageBitmap(response);
+                    }
+                }, 0, 0, ImageView.ScaleType.CENTER_CROP, null, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {/*empty*/}
+        });
+        ImageQueue.getInstance(getContext()).addToQueue(imageRequest);
+
+        // Recipe Name TextView
+        TextView recipeName = (TextView) view.findViewById(R.id.suggest_popup_title);
+        recipeName.setText(recipe.getName());
+
+        // Description TextView
+        TextView recipeDescription = (TextView) view.findViewById(R.id.suggest_popup_description);
+        recipeDescription.setText(recipe.getDescription());
+
+        // Prepare for Expandable List View
+        ArrayList<String> sectionsList = new ArrayList<>();
+        sectionsList.add("Ingredients");
+        sectionsList.add("Instructions");
+        HashMap<String, ArrayList<String>> sectionsContent = new HashMap<>(); //shared prefs
+        ArrayList<String> instructions = recipe.getInstructions();
+        sectionsContent.put(sectionsList.get(0), ingToString);
+        sectionsContent.put(sectionsList.get(1), instructions);
+
+        // Ingredients and Instructions Expandable ListView
+        ExpandableListView expandableListView = (ExpandableListView) view.findViewById(R.id.suggest_expanded);
+        PopupListAdapter popupListAdapter = new PopupListAdapter(getContext(), sectionsList, sectionsContent);
+        expandableListView.setAdapter(popupListAdapter);
+
+        // Create the popup
+        popupBuilder.setView(view);
+        suggestionPopup = popupBuilder.create();
+        suggestionPopup.show();
+    }
+
+
+
+
+
+
     private void populateSuggestionCards() {
 
         if(getContext()!=null) {
-            SuggestionsAdapter searchResultsAdapter = new SuggestionsAdapter(getContext(), suggestedRecipesList);
-            suggestionsCards.setAdapter(searchResultsAdapter);
-            suggestionsCards.setPadding(50,0, 50, 0);
+            SuggestionsAdapter suggestionsAdapter = new SuggestionsAdapter(getContext(), suggestedRecipesList);
+            suggestionCards.setAdapter(suggestionsAdapter);
+            suggestionCards.setPadding(50,0, 50, 0);
         }
         if(suggestedRecipesList.size()==0){
-            Toast.makeText(getContext(), "No results found.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "No suggestions available.", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getContext(), "Swipe left to see more recipes.", Toast.LENGTH_SHORT).show();
         }
         viewPager.setVisibility(View.VISIBLE);
-        //suggestionsCards.setVisibility(View.VISIBLE);
+        //suggestionCards.setVisibility(View.VISIBLE);
     }
 
     @Override

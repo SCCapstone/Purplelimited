@@ -136,7 +136,6 @@ public class SearchFragment extends Fragment {
 
     @Override
     protected void onPostExecute(String s) {
-      //TODO: minimize try/catch blocks
       searchResultsArrayList.clear();
       try {
         JSONObject resultsJSON = new JSONObject(s);
