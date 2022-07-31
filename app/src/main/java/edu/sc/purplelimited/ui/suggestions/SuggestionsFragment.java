@@ -159,9 +159,9 @@ public class SuggestionsFragment extends Fragment {
 //                /*empty*/
 //            }
 //        });
-
-        suggestionsViewModel.getText().observe(getViewLifecycleOwner(), s -> {
-        });
+//
+//        suggestionsViewModel.getText().observe(getViewLifecycleOwner(), s -> {
+//        });
 
 
         return root;
@@ -173,9 +173,7 @@ public class SuggestionsFragment extends Fragment {
 //        @Override
 //        protected String doInBackground(String... strings) {
 //
-////            String search = onHandArrayList.toString();
-//            String search = " ";
-//
+//            String search = onHandArray.toString();
 //            StringBuilder keywords = new StringBuilder(search);
 //            for (int i = 0; i < keywords.length(); i++) {
 //                if (keywords.charAt(i)==',' || keywords.charAt(i)=='[' || keywords.charAt(i)==']') {
@@ -310,30 +308,6 @@ public class SuggestionsFragment extends Fragment {
 
     private void populateSuggestionCards() {
 
-//        ArrayList<SuggestionsViewModel> suggCards = new ArrayList<>();
-//        int burger = R.drawable.burger;
-//        int chickenSalad = R.drawable.chicken_salad;
-//        int pasta = R.drawable.alfredo_shrimp_pasta;
-//        int current;
-//        for (Recipe recipe : suggestedRecipesList) {
-//            switch(recipe.getName()) {
-//                case "BBQ Bacon Burger":
-//                    current = burger;
-//                    break;
-//                case "Shrimp Alfredo Pasta":
-//                    current = pasta;
-//                    break;
-//                case "Chicken Salad":
-//                    current = chickenSalad;
-//                    break;
-//                default:
-//                    current = burger;
-//                    break;
-//            }
-////            suggCards.add(new SuggestionsViewModel(recipe.getName(), recipe.getDescription(), current));
-//        }
-
-
         if(getContext()!=null) {
             SuggestionsAdapter searchResultsAdapter = new SuggestionsAdapter(getContext(), suggestedRecipesList);
             suggestionsCards.setAdapter(searchResultsAdapter);
@@ -345,7 +319,7 @@ public class SuggestionsFragment extends Fragment {
             Toast.makeText(getContext(), "Swipe left to see more recipes.", Toast.LENGTH_SHORT).show();
         }
         viewPager.setVisibility(View.VISIBLE);
-        suggestionsCards.setVisibility(View.VISIBLE);
+        //suggestionsCards.setVisibility(View.VISIBLE);
     }
 
     @Override
