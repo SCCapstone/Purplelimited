@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:text="Save Recipe"
                 android:layout_gravity="center"
-                android:id="@+id/saveSugg"/>
+                android:id="@+id/saveFromSearch"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </LinearLayout>

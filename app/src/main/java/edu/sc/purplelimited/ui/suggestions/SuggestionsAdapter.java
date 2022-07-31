@@ -46,17 +46,17 @@ public class SuggestionsAdapter extends PagerAdapter {
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        View view = LayoutInflater.from(context).inflate(R.layout.sugg_card_images, container, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.search_result_card_images, container, false);
 
         // Instantiate the Views
 
         // create second suggestions.xml file. Replace below
 
-        ImageView cardImage = view.findViewById(R.id.suggCard);
-        TextView cardTitle = view.findViewById(R.id.suggCardTitle);
-        TextView cardDescription = view.findViewById(R.id.suggCardDescription);
-        Button saveSuggest = view.findViewById(R.id.saveSugg);
-        saveSuggest.setOnClickListener(new View.OnClickListener() {
+        ImageView cardImage = view.findViewById(R.id.searchCardImage);
+        TextView cardTitle = view.findViewById(R.id.searchCardTitle);
+        TextView cardDescription = view.findViewById(R.id.searchCardDescription);
+        Button saveButton = view.findViewById(R.id.saveFromSearch);
+        saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 SavedRecipesFragment.addRecipe(suggestions.get(position), context);
