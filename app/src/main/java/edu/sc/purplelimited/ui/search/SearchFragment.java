@@ -40,7 +40,6 @@ public class SearchFragment extends Fragment {
   private ArrayList<Recipe> searchResultsArrayList = new ArrayList<>();
   private View root;
   private ProgressBar progressBar;
-  private int minPage = 0;
 
   public View onCreateView(@NonNull LayoutInflater inflater,
                            ViewGroup container, Bundle savedInstanceState) {
@@ -48,26 +47,6 @@ public class SearchFragment extends Fragment {
     binding = FragmentSearchBinding.inflate(inflater, container, false);
     root = binding.getRoot();
     viewPager = root.findViewById(R.id.view_pager_suggestions);
-    viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-      @Override
-      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-      }
-
-      @Override
-      public void onPageSelected(int position) {
-        if(position < minPage) {
-          viewPager.setCurrentItem(minPage);
-        } else {
-          minPage = position;
-        }
-      }
-
-      @Override
-      public void onPageScrollStateChanged(int state) {
-
-      }
-    });
     searchBar = root.findViewById(R.id.search_recipe_text);
     Button searchButton = root.findViewById(R.id.search_button);
     progressBar = root.findViewById(R.id.search_progress);
